@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>Kharcha Khata</title>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static' , filename = 'css/login.css' )}}">
+	<link rel="icon" href="https://pngimg.com/uploads/letter_k/letter_k_PNG69.png" type="image/png">
+	<link rel="icon" href="https://pngimg.com/uploads/letter_k/letter_k_PNG69.png" type="image/png">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+	
+</head>
+<body>
+
+	<div class = "center_main">
+		<div class="heading">
+				KHARCHAKHATA
+		</div>
+		<div class="login container" id="login_window">
+			
+			<div class="row">
+				<div class="center_left col col-md-12 col-sm-12">
+					<form class="login_form" method="post" action="/admin_login_validation">
+						  <div class="form-group">
+						    <label for="exampleInputEmail1">E-mail Address...</label>
+						    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email">
+						  </div>
+						  <div class="form-group">
+						    <label for="exampleInputPassword1">Password</label>
+						    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+						  </div>
+						  <div class="form-check">
+						    <input type="checkbox" class="form-check-input" id="exampleCheck1" name="remember_me">
+						    <label class="form-check-label" for="exampleCheck1">Remember Me</label>
+						  </div>
+						  
+						  <a href="/forgot_password" class="btn btn-outline-danger" role="button">Forgot password</a>
+						  <button type="submit" class="btn btn-success float-right">Login Now</button>
+					</form>
+					
+				</div>
+
+			</div>
+		</div>
+
+
+
+
+	</div>
+
+</body>
+</html>

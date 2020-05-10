@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+		{% if title %}
+			<title>KharchaKhata - {{ title }}</title>
+		{% else %}
+			<title>KharchaKhata</title>
+		{% endif %}
+		<link rel="icon" href="https://pngimg.com/uploads/letter_k/letter_k_PNG69.png" type="image/png">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+		{% block title%}
+		{% endblock %}
+
+
+		<style>
+			.heading {
+				background-image: linear-gradient(to right , #1FBFCA , #E8C718);
+				padding-bottom: 10px;
+				margin-bottom: 10px;
+				font-size: 40px;
+			}
+			.heading a{
+				color: #DC004B;
+			}
+			.heading a:hover{
+				color: #DC004B;
+			}
+			.footer{
+				 background-image: linear-gradient(to right , #1FBFCA , #E8C718);
+				 margin-top: 10px;
+				 padding-bottom: 10px;
+				 padding-top: 10px;
+				 position: fixed;
+				 bottom: 0;
+				 width: 100%;
+			}
+			.heading #name_app{
+				text-align: right;
+			}
+			body {
+				padding-bottom: 5%;
+				margin-bottom: 5%;
+			}
+		</style>
+</head>
+<body>
+	<nav class="navbar heading">
+	    <strong id="name_app"><a href="/dashboard/all/all">KHARCHAKHATA</a></strong>
+	    {% if user_name %}
+	    	<strong id="my_account"><a href="/my_account">Hi! {{ user_name}}</a></strong>
+	    {% else %}
+	    	<div class="text-right">
+	    		<div class="row">
+	    			<div class="col-4">
+	    				<a href="{{ url_for('route.home')}}">
+	    					<button class="btn text-danger my-auto"><strong>Login</strong></button>
+	    				</a>
+	    			</div>
+<!-- 	    			<div class="col-1">
+	    				|
+	    			</div> -->
+	    			<div class="col-7">
+	    				<a href="{{url_for('auth.registration_form')}}">
+	    					<button class="btn text-danger my-auto"><strong>Sign Up</strong></button>
+	    				</a>
+	    			</div>
+	    		</div>
+	    	</div>
+	    {% endif %}
+	</nav>
+		<!--  
+		Flash Message
+		-->
+	{% with messages = get_flashed_messages(with_categories = true ) %}
+		{% if messages %}
+			{% for category, message in messages %}
+				<div class="alert alert-{{ category }}">
+					{{ message}}
+				</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}	
+
+
+
+
+
+	{% block content %}
+	{% endblock %}
+
+	<div class="footer text-center">
+		<div>
+			A Complete Project By Md Shakib Mondal
+		</div>
+	</div>
+
+	{% block script %}
+	{% endblock %}
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

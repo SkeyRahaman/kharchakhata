@@ -1,0 +1,80 @@
+body {
+	background: linear-gradient(90deg, #E8C718 50%, #1FBFCA 50%);
+	
+
+}
+
+.center_main {
+	border: 8px solid #4CAF50;
+	background-image: linear-gradient(to right , #1FBFCA , #E8C718);
+	width: 56vw;
+	margin: auto;
+	margin-top: 30vh;
+	margin-bottom: 30vh;
+	padding: 3vw;
+}
+
+
+.heading {
+	color: #DC004B;
+	font-size: 4vw;
+	text-align: center;
+}
+.login{
+}
+.center_left {
+	width: 20vw;
+	padding-left: 0.5vw;
+}
+
+.or {
+	align-self: center;
+	font-size: 110%;
+	text-align: center;
+}
+
+.center_right {
+	width: 5vw;
+	align-self: center;
+}
+.go_to_registration{
+}
+
+
+#google_api {
+	width: 9vw;
+	height: 10vh;
+}
+
+#fb_api {
+	width: 9vw;
+	height: 10vh;
+}
+.center_main_register p{
+	text-align: center;
+	font-size: 2vw;
+}
+
+
+.tab {
+  display: none;
+  padding-bottom: 2vw;
+}
+
+
+#register_btn {
+	display: none;
+}
+
+.down_button{
+	padding-top: 3vw;
+}
+
+#birthday {
+	font-size: 1.5vw;
+	align-content: center;
+}
+
+
+
+

@@ -1,0 +1,174 @@
+.heading {
+	background-image: linear-gradient(to right , #1FBFCA , #E8C718);
+	font-size: 1.5vw;
+}
+.heading a{
+	color: #DC004B;
+	font-size: 2vw;
+}
+.heading a:hover{
+	color: #DC004B;
+}
+
+.entry_form_container{
+	width: 100%;
+	top : 0;
+	position: absolute;
+	z-index: 5;
+}
+
+.entry_conformation{
+	border-radius: 10px;
+	background-color: white;
+	border:2px solid gray;
+	top : 5%;
+	position: absolute;
+	z-index: 6;
+	margin: 25%;
+	margin-top: 10%;
+	width: 50%;
+	padding: 5%;
+	display: none;
+	overflow : auto;
+}
+
+
+
+.new_entry_form{
+	border-radius: 10px;
+	background-color: white;
+	opacity: 75;
+	border: 2px solid gray;
+	width: 75%;
+	margin : auto;
+	margin-top: 10%;
+	margin-bottom: 10%;
+	padding: 1vw;
+	display: none;
+	bottom: 0;
+/*	max-height: 60vw;*/
+	overflow : auto;
+}
+
+a:hover {
+	cursor: pointer;
+}
+
+.side_btns .card-body{
+	margin: 10px;
+}
+
+
+
+
+/*.expand_it {
+	text-align: center;
+	margin: 1vw;
+	border-radius: 1vw;
+	transition: margin 2s;
+}
+.expand_it:hover{
+	margin: 0vw;
+}*/
+
+#total_earning_card_body{
+	border :2px solid #FEC107;
+	color: #FEC107;
+	text-align: center;
+	margin: 1.5vw;
+	border-radius: 1vw;
+	box-shadow: 0vw 0vw 0px grey;
+	transition: margin 2s;
+
+}
+#total_earning_card_body:hover{
+
+	color: black;
+	background: #FEC107;
+	margin: .5vw;
+	box-shadow: .5vw .5vw .5vw grey;
+}
+
+#total_expence_card_body{
+	border :2px solid #13A4B5;
+	color: #13A4B5;
+	text-align: center;
+	margin: 1.5vw;
+	border-radius: 1vw;
+	box-shadow: 0vw 0vw 0px grey;
+	transition: margin 2s;
+}
+
+#total_expence_card_body:hover {
+	color: black;
+	background: #13A4B5;
+	margin: .5vw;
+	box-shadow: .5vw .5vw .5vw grey;
+}
+#total_savings_card_body{
+	border :2px solid #27A844;
+	color: #27A844;
+	text-align: center;
+	margin: 1.5vw;
+	border-radius: 1vw;
+	box-shadow: 0vw 0vw 0px grey;
+	transition: margin 2s;;
+}
+#total_savings_card_body:hover{
+	color: black;
+	background: #27A844;
+	margin: .5vw;
+	box-shadow: .5vw .5vw .5vw grey;
+}
+#last_savings_card_body{
+	border :2px solid 	#007AFF;
+	color: #007AFF;
+	text-align: center;
+	margin: 1.5vw;
+	border-radius: 1vw;
+	box-shadow: 0vw 0vw 0px grey;
+	transition: margin 2s;
+}
+#last_savings_card_body:hover{
+	color: black;
+	background: #007AFF;
+	margin: .5vw;
+	box-shadow: .5vw .5vw .5vw grey;	
+}
+
+.top_cards{
+	vertical-align: middle;
+}
+
+
+
+
+
+
+
+
+
+.nav-link {
+	font-size: 15px;
+	transition: font-size 1s;
+}
+
+.nav-link:hover{
+	font-size: 17px;
+}
+
+#Creat_button_down {
+	font-size: 2vw;
+	transition: font-size 1s;
+}
+#Creat_button_down:hover {
+	font-size: 2.25vw;
+}
+.footer{
+	 background-image: linear-gradient(to right , #1FBFCA , #E8C718);
+	 margin-top: 10px;
+	 padding-bottom: 10px;
+	 padding-top: 10px;
+}
+
+

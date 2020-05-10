@@ -1,0 +1,29 @@
+.heading {
+	background-image: linear-gradient(to right , #1FBFCA , #E8C718);
+	font-size: 20px;
+}
+.settings_nav {
+	padding : 3%;
+	border: solid;
+	border-color: gray;
+
+}
+.settings_nav_elements{
+	padding: 3%;
+}
+
+.settings_feild_elements {
+	border-radius: 10px;
+	padding-right: 20%;
+	padding-bottom: 10%;
+	padding-left: 5%;
+	padding-top: 5%;
+}
+
+.password_not_match {
+	color: red;
+}
+
+.notice {
+	text-align: center;
+}

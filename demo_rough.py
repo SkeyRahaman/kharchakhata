@@ -1,0 +1,5 @@
+a = set("Shakib")
+b = set({"sakib": 1})
+print(a)
+print(b)
+print(a.difference(b))

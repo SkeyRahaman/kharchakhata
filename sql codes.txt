@@ -1,0 +1,7 @@
+SELECT YEAR(`expences`.`date`) as SalesYear,
+         MONTH(`expences`.`date`) as SalesMonth,
+         SUM(`expences`.`amount`) AS TotalSales
+    FROM `expences`
+    WHERE `expences`.`user_id` LIKE  5 AND `expences`.`credit_debit_id` LIKE 1 
+GROUP BY YEAR(`expences`.`date`), MONTH(`expences`.`date`)
+ORDER BY YEAR(`expences`.`date`), MONTH(`expences`.`date`)

@@ -1,0 +1,289 @@
+{% extends "layout.html" %}
+
+
+
+{% block title %}
+	<link rel="stylesheet" type="text/css" href="{{url_for('static' , filename = 'css/dashboard.css' )}}">
+{% endblock title%}
+
+{% block content %}
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+	            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="navbar-toggler-icon"></span>
+	    </button>
+	    <div class="collapse navbar-collapse" id="navbarNav">
+	        <ul class="navbar-nav">
+	            <li class="nav-item active">
+	                <a class="nav-link" href="/dashboard/all/all" style="font-size: 22px;"><strong>Dashboard</strong></a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/dashapp/"><strong>Charts</strong></a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/my_account"><strong>My Account</strong></a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link add_transsetion" id="add_transsetion_up"><strong>Add Transaction</strong>
+	                </a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/about"><strong>About</strong></a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/settings/none"><strong>Settings</strong></a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/logout"><strong>Logout</strong></a>
+	            </li>
+	            <li class="nav-item">
+	                <div class="btn-group">
+	                    <button type="button" class="btn btn-default dropdown-toggle nav-link" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="true">
+	                        Select Month
+	                    </button>
+	                    <div class="dropdown-menu">
+	                    	<a class="dropdown-item" href="/dashboard/all/all">All</a>
+	                        {% for i in months %}
+	                        <a class="dropdown-item" href="/dashboard/{{i[0]}}/{{i[1]}}">{{i[0]}}  {{i[1]}}</a>
+	                        {% endfor %}
+	                    </div>
+	                </div>
+	            </li>
+	        </ul>
+	    </div>
+	</nav>
+
+
+
+
+
+
+
+
+
+	<br>
+	<div class="container-fluid top_cards">
+		<div class="row">
+			<div  class=" card col-xs-12 col-sm-6 col-md-6 col-lg-3">
+				<div class="card-body expand_it" id="total_earning_card_body">
+					<h5>Total Earning..</h5>
+					<h3>Rs. {{nav_bar.income}}</h3>
+				</div>
+			</div>
+			<div  class=" card col-xs-12 col-sm-6 col-md-6 col-lg-3">
+				<div class="card-body expand_it" id="total_expence_card_body">
+					<h5>Total Expense..</h5>
+					<h3>Rs. {{nav_bar.expence}}</h3>
+				</div>
+			</div>
+			<div  class=" card col-xs-12 col-sm-6 col-md-6 col-lg-3">
+				<div class="card-body expand_it" id="total_savings_card_body">
+					<h5>Total Savings..</h5>
+					<h3>Rs. {{nav_bar.savings}}</h3>
+				</div>
+			</div>
+			<div  class=" card col-xs-12 col-sm-6 col-md-6 col-lg-3">
+				<div class="card-body expand_it" id="last_savings_card_body">
+						<h5>Last Month Saving..</h5>
+						<h3>Rs. {{nav_bar.last_month_savings}}</h3>
+				</div>
+			</div>
+		</div>
+	</div><br>
+
+
+
+
+	<div class="container-fluid ">
+		<div class="row">
+			<div class="table-responsive col-lg-10 col-md-12 col-sm-12">
+				<table class="table table-striped table-hover text-right" id="main_table">
+					<thead class="thead-dark">
+					    <tr>
+					    	<th></th>
+					    	<th scope="col">Expence Name</th>
+					        <th scope="col">Date</th>
+					        <th scope="col">Time</th>
+					        <th scope="col">Credit/Debit</th>
+					        <th scope="col">Type</th>
+					        <th scope="col">Sub-Type</th>
+					        <th scope="col">Frequency</th>
+					        <th scope="col">Amount</th>
+					        <th scope="col">Payment Method</th>
+					 	</tr>
+					</thead>
+					<tbody>
+						{% for row in table %}
+							<tr id="{{row[-1]}}">
+								<th><input type="checkbox" name="check_{{row[-1]}}" ></th>
+								{% for i in row[:-1] %}
+								<th>{{i}}</th>
+								{% endfor %}
+							</tr>
+						{%endfor%}
+					</tbody>
+				</table>
+				<button type="button" class="btn btn-info"  onclick="load_more_table()">Load More</button><br>
+			</div>
+			<div class="side_btns col-lg-2 col-md-6 col-sm-12 container-fluid align-middle">
+				<div class="card  col-lg-12 col-md-12 col-sm-6 col-xs-12">
+					<div  class="card-body" id="creat_card">
+						<h5>Add new entry...</h5>
+						<button class="btn btn-success" data-toggle="modal" data-target="new_entry_form" id="add_transsetion_down">Creat</button>
+					</div>
+				</div>
+				<div class="card  col-lg-12 col-md-12 col-sm-6 col-xs-12">
+					<div class="card-body">
+						<h5>KharchaKhata Android App</h5>
+						<button type="button" class="btn btn-success">Downlode</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<div class="entry_form_container">
+		<div class="new_entry_form" id="new_entry_form">
+			<form name="new_entry_form" method="post" action="/enter_transaction" id="new_entry_form_o">
+				<div class="expence_heading">
+					<strong>Add New Transaction:-</strong>
+					<div>
+						<label class="btn btn-danger float-right" id="close_new_entry_form" type="button">Close</label>
+					</div>
+				</div>				
+				<div class="form-group">
+					<label  for="ex_name"><strong>Expence name:-</strong></label>
+					<input class="form-control" type="text" name="ex_name" id="expence_name_first">
+					<small class="form-text text-muted required">*Requires</small>
+				</div>
+				<div>
+					<label><strong>Date:-</strong></label>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="today_check" id="date_today" checked>
+							Today.
+						</label>
+					</div>
+					<input type="date" name="transaction_date" id="transaction_date" disabled >
+				</div><br>
+				<div>
+					<label><strong>Time:-</strong></label>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="time_check" id="time_now" checked>
+							Now.
+						</label>
+					</div>
+					<input type="time" name="transaction_time" id="transaction_time" disabled >
+				</div><br>
+				<div class="form-group">
+					<label  for="credit_debit"><strong>Credit/Debit:-</strong></label>
+					<select class="form-control" name="credit_debit" id="c_d_first">
+						<option value="1">Credit</option>
+						<option value="2">Debit</option>
+					</select>
+					<small class="form-text text-muted">*Credit is Your Income.<br>*Debit is your Expenditure.</small>
+				</div>
+				<div class="form-group">
+					<label for="type"><strong>Type:-</strong></label>
+					<select class="form-control" name="type" onchange="get_subtype()" id="type">
+						{% for i in type_list%}
+							<option value={{i[0]}}>{{i[1]}}</option>
+						{% endfor%}
+					</select>
+				</div>
+				<script>get_subtype()</script>
+				<div class="form-group">
+					<label for="sub_type"><strong>Sub-Type:-</strong></label>
+					<select class="form-control" name="sub_type" id="sub_type">
+						{% for i in sub_type_list %}
+							<option value={{i[0]}}>{{i[1]}}</option>
+						{% endfor%}
+					</select>
+				</div>
+				<div class="form-group">
+					<label  for="frequency"><strong>Frequency:-</strong></label>
+					<select class="form-control" name="frequency" id="frequency">
+						{% for i in frequency %}
+							<option value={{i[0]}}>{{i[1]}}</option>
+						{% endfor%}
+					</select>
+				</div>
+				<div class="form-group">
+					<label  for="ex_name"><strong>Payment Method:-</strong></label>
+					<select class="form-control" id="sel1" name="pay_method">
+						{% for i in payment_medium %}
+							<option value={{i[0]}}>{{i[1]}}</option>
+						{% endfor%}
+					</select>
+				</div>
+				<div class="form-group">
+					<label  for="amount"><strong>Amount:-</strong></label>
+					<input class="form-control" type="number" name="amount" id="amount_first">
+					<small class="form-text text-muted required">*Requires</small>
+				</div>
+				<div class="form-group">
+					<label for="comment"><strong>Comment:-</strong></label>
+					<textarea class="form-control" rows="5" name="comment"  placeholder="Under 250 charecter." id="comment_first" value="Hi"></textarea>
+				</div>
+
+
+
+				<button type="button" class="btn btn-outline-success" onclick="check_new_transaction()">Add</button>
+			</form>
+
+
+			
+		</div>
+		<div class="entry_conformation" id="entry_conformation">
+			<button type="button" class="btn btn-danger float-right" onclick="go_back_to_edit()"> Close</button>
+
+			<h3>Transaction Details</h3>
+
+			<br>
+			<label>Expence Name:-</label>
+			<label><strong id="expence_name_con">Text</strong></label><br>
+
+			<label>Date:-</label>
+			<label><strong id="date_con">Text</strong></label><br>
+			
+			<label>Time:-</label>
+			<label><strong id="time_con">Text</strong></label><br>
+			
+			<label>Credit/Debit:-</label>
+			<label><strong id="c_d_con">Text</strong></label><br>
+			
+			<label>Type:-</label>
+			<label><strong id="type_con">Text</strong></label><br>
+			
+			<label>Sub-Type:-</label>
+			<label><strong id="sub_type_con">Text</strong></label><br>
+			
+			<label>Frequency:-</label>
+			<label><strong id="frequency_con">Text</strong></label><br>
+			
+			<label>Payment Method:-</label>
+			<label><strong id="pay_method_con">Text</strong></label><br>
+			
+			<label>Amount:-</label>
+			<label><strong id="amount_con">Text</strong></label><br>
+			
+			<label>Comment:-</label>
+			<label><strong id="comment_con">Text</strong></label><br>
+			
+
+			<button type="submit" class="btn btn-success float-right" form="new_entry_form_o">ADD.</button>
+			<button type="button" class="btn btn-danger float-left" onclick="go_back_to_edit()">Edit Details</button>
+		</div>
+	</div>
+{% endblock content%}
+
+
+{% block script %}
+	<script type="text/javascript" src="{{url_for('static' , filename = 'js/dashboard.js' )}}"></script>
+{% endblock script %}
