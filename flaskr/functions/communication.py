@@ -20,7 +20,7 @@ def send_mail(to, name, reset_url):
         msg['From'] = config.email_user
         msg['To'] = to
         msg['subject'] = "Password Reset Email.Do not Reply."
-        messege = read_template("templates/password_reset_email.html").substitute(PERSON_NAME=name, PASSWORD=reset_url,
+        messege = read_template("flaskr/templates/password_reset_email.html").substitute(PERSON_NAME=name, PASSWORD=reset_url,
                                                                                   EMAIL=to)
         msg.attach(MIMEText(messege, 'html'))
         server.send_message(msg)

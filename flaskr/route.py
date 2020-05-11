@@ -1,15 +1,17 @@
 from flask import (Blueprint, flash, g, redirect, render_template, request, url_for, jsonify)
 from flaskr.functions import *
 from datetime import datetime as dt
+from flaskr.forms import Reset_password
 from flaskr.forms import Login_form, RegistrationForm
+
 bp = Blueprint('route', __name__)
 
 
 @bp.route("/")
 def home():
     if 'user_id' not in session:
-        flash("Done", "success")
-        return render_template('login.html', form=Login_form())
+        return redirect(url_for("auth.login"))
+        # return render_template('login.html', form=Login_form())
     elif 'user_id' in session:
         month = datetime.now().strftime("%B")
         year = datetime.now().year
@@ -178,11 +180,25 @@ def edit_profile():
     return redirect('/my_account')
 
 
-@bp.route('/settings/<string:notice>')
-def settings(notice):
-    if notice == "none":
-        notice = ''
-    return render_template("settings.html", notice=notice, user_name=session['name'])
+@bp.route('/settings', methods=["get", "post"])
+def settings():
+    form_password = Reset_password()
+    if form_password.validate_on_submit():
+        cpassword = request.form.get('password')
+        cnpassword = request.form.get('cnpassword')
+
+        query = """SELECT `password` FROM `users` WHERE `user_id` LIKE {};""".format(session['user_id'])
+        current_password = run_in_database(quary=query, fetch='yes')
+        current_password = current_password[0][0]
+
+        if current_password == cpassword:
+            query = """UPDATE `users` SET `password`= '{}' WHERE `user_id` LIKE {};""".format(cnpassword,
+                                                                                              session['user_id'])
+            __ = run_in_database(quary=query, commit='yes')
+            flash("Password Updated Successful!.", "success")
+        else:
+            flash("Current Password Does Not Match!", "danger")
+    return render_template("settings.html", user_name=session['name'], form_password=form_password)
 
 
 @bp.route('/get_subtype_of_type/<type_id>')

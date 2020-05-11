@@ -1,5 +1,7 @@
 .idea
 .vscode
+.idea/
+.vscode/
 _pycache_
 venv
 venv/
@@ -15,5 +17,3 @@ htmlcov/
 dist/
 build/
 *.egg-info/
-.idea
-.vscode

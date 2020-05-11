@@ -5,6 +5,15 @@ import mysql.connector
 import pandas as pd
 
 
+def check_email_in_databace(email):
+    query = "SELECT * FROM `users` WHERE `users`.`email` LIKE '{}';".format(email)
+    result = run_in_database(quary=query, fetch='yes')
+    if result:
+        return result[0][1], result[0][5]   #returns firs name and email address.
+    else:
+        return False, False
+
+
 def week_of_month(date_value):
     return date_value.isocalendar()[1] - date_value.replace(day=1).isocalendar()[1] + 1
 

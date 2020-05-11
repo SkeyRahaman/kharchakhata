@@ -10,10 +10,20 @@ class Forgot_password_form(FlaskForm):
 
 
 class Reset_password(FlaskForm):
+    password = PasswordField('Password',
+                             validators=[DataRequired()])
+    npassword = PasswordField('New Password',
+                              validators=[DataRequired()])
+    cnpassword = PasswordField('Confirm New Password',
+                               validators=[DataRequired(), EqualTo('npassword')])
+    submit = SubmitField("Change Password.")
+
+
+class Creat_new_password(FlaskForm):
     npassword = PasswordField('Password',
                               validators=[DataRequired()])
     cnpassword = PasswordField('Confirm Password',
-                               validators=[DataRequired(), EqualTo(npassword)])
+                               validators=[DataRequired(), EqualTo('npassword')])
     submit = SubmitField('Sign Up')
 
 
@@ -21,19 +31,13 @@ class RegistrationForm(FlaskForm):
     fname = StringField('First Name',
                         validators=[
                             DataRequired(),
-                            Length(min=3, max=20)
+                            Length(min=2, max=20)
                         ])
-
-    mname = StringField('Middle Name',
-                        validators=[
-                            DataRequired(),
-                            Length(min=3, max=20)
-                        ])
-
+    mname = StringField('Middle Name')
     lname = StringField('Last Name',
                         validators=[
                             DataRequired(),
-                            Length(min=3, max=20)
+                            Length(min=2, max=20)
                         ])
 
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -41,12 +45,12 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password',
                              validators=[DataRequired()])
     cpassword = PasswordField('Confirm Password',
-                              validators=[DataRequired(), EqualTo(password)])
+                              validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
 
 class Login_form(FlaskForm):
-    email = StringField('Email', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password',
                              validators=[DataRequired()])
     remember = BooleanField('Remember Me')
