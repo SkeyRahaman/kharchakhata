@@ -63,7 +63,7 @@ def forgot_password():
             token = s.dumps(email, salt="this_is_the_email")
             reset_url = "http://" + str(request.host) + "/reset_password/" + str(token)
             print(reset_url)
-            # send_mail(to=email, name=name, reset_url=reset_url)
+            send_mail(to=email, name=name, reset_url=reset_url)
             flash("URL to reset your password is send to " + email + ", Visit your Email to Reset Your Password!",
                   "success")
             return redirect('/')

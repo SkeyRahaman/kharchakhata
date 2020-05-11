@@ -1,8 +1,8 @@
 from flask import (Blueprint, flash, g, redirect, render_template, request, url_for, jsonify)
+from flask import session
 from flaskr.functions import *
 from datetime import datetime as dt
 from flaskr.forms import Reset_password
-from flaskr.forms import Login_form, RegistrationForm
 
 bp = Blueprint('route', __name__)
 
@@ -11,7 +11,6 @@ bp = Blueprint('route', __name__)
 def home():
     if 'user_id' not in session:
         return redirect(url_for("auth.login"))
-        # return render_template('login.html', form=Login_form())
     elif 'user_id' in session:
         month = datetime.now().strftime("%B")
         year = datetime.now().year
