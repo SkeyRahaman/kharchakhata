@@ -1,7 +1,9 @@
 from flaskr.functions import *
 from flask import (Blueprint, redirect, render_template, request, session)
-from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form, Creat_new_password,Reset_password
+from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form, Creat_new_password, Reset_password
 from itsdangerous import URLSafeTimedSerializer
+from flask_login import login_user, logout_user
+from flaskr.models import Users
 
 bp = Blueprint('auth', __name__)  # url_prefix="/auth"
 
@@ -10,13 +12,14 @@ s = URLSafeTimedSerializer("Very secret key")
 
 @bp.route("/login", methods=["get", 'post'])
 def login():
+    print(Users.query.all()[0])
     form = Login_form()
     if form.validate_on_submit():
-        if str(request.form.get("remember")) == "on":
-            session.permanent = True
-        email = request.form.get('email').lower()
         password = request.form.get('password')
-        login_with(email=email, password=password)
+        # login_with(email=email, password=password)
+        user = Users.query.filter_by(email=request.form.get('email').lower()).first()
+        if user and user.password == password:
+            login_user(user, remember=request.form.get("remember"))
         return redirect("/")
     else:
         return render_template("login.html", title="Login", form=form)
@@ -116,6 +119,5 @@ def password_validation():
 
 @bp.route('/logout')
 def logout():
-    session.pop('user_id')
-    session.pop('name')
+    logout_user()
     return redirect('/')

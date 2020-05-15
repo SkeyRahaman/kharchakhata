@@ -3,13 +3,21 @@ from datetime import datetime
 import config
 import mysql.connector
 import pandas as pd
+# from application import login_manager
+
+
+# @login_manager.user_loader()
+# def load_user(user_id):
+#     query = "SELECT `user_id`, `fname`,`email`FROM `users` WHERE `user_id` LIKE {};".format(user_id)
+#     result = run_in_database(quary=query, fetch='yes')
+#     return False
 
 
 def check_email_in_databace(email):
     query = "SELECT * FROM `users` WHERE `users`.`email` LIKE '{}';".format(email)
     result = run_in_database(quary=query, fetch='yes')
     if result:
-        return result[0][1], result[0][5]   #returns firs name and email address.
+        return result[0][1], result[0][5]  # returns firs name and email address.
     else:
         return False, False
 

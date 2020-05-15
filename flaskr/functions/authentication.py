@@ -1,6 +1,5 @@
 from flaskr.functions.database import *
-from flask import session,flash
-
+from flask import session, flash
 
 def login_with(email, password):
     quary = """SELECT * FROM `users` WHERE `email` LIKE '{}' AND `password` LIKE '{}'""".format(email, password)
@@ -9,7 +8,7 @@ def login_with(email, password):
     if len(users) > 0:
         session['user_id'] = users[0][0]
         session['name'] = users[0][1]
-        flash("Loged in as "+users[0][1], "success")
+        flash("Loged in as " + users[0][1], "success")
         return True
     else:
         return False

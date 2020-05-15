@@ -47,13 +47,13 @@
 <body>
 	<nav class="navbar heading">
 	    <strong id="name_app"><a href="/">KHARCHAKHATA</a></strong>
-	    {% if user_name %}
-	    	<strong id="my_account"><a href="/my_account">Hi! {{ user_name}}</a></strong>
+	    {% if current_user.is_authenticated %}
+	    	<strong id="my_account"><a href="/my_account">Hi! {{ current_user.fname }}</a></strong>
 	    {% else %}
 	    	<div class="text-right">
 	    		<div class="row">
 	    			<div class="col-4">
-	    				<a href="{{ url_for('route.home')}}">
+	    				<a href="{{ url_for('home')}}">
 	    					<button class="btn text-danger my-auto"><strong>Login</strong></button>
 	    				</a>
 	    			</div>
@@ -75,7 +75,7 @@
 	{% with messages = get_flashed_messages(with_categories = true ) %}
 		{% if messages %}
 			{% for category, message in messages %}
-				<div class="alert alert-{{ category }}">
+				<div class="alert alert-{{ category }} row col-7 mx-5 mt-2">
 					{{ message}}
 				</div>
 			{% endfor %}

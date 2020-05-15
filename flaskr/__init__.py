@@ -1,16 +1,22 @@
 from flask import Flask
-import os
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+
+app = Flask(__name__)
+app.config.from_object('config.Config')
+db = SQLAlchemy()
+db.init_app(app)
+loginmanager = LoginManager(app)
+loginmanager.login_view = 'home'
+loginmanager.login_message_category = 'info'
 
 
-def create_app():
-    app = Flask(__name__)
-    app.config['EXPLAIN_TEMPLATE_LOADING'] = True
-    app.config['SECRET_KEY'] = os.urandom(24)
-    from . import auth, route
+with app.app_context():
+    from . import auth
     app.register_blueprint(auth.bp)
-    app.register_blueprint(route.bp)
+
+    from flaskr.route import *
 
     from flaskr.dashboard_dash.dashboard import create_dashboard
-    app = create_dashboard(app)
 
-    return app
+    app = create_dashboard(app)
