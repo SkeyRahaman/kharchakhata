@@ -8,10 +8,9 @@ from flask_login import current_user, login_required
 
 @app.route("/")
 def home():
-    try:
-        print("I am The Testing part ", current_user.fname)
-    except:
-        print("I am The Testing part ", current_user.is_authenticated)
+    print("I am The Testing part xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", current_user.is_authenticated)
+
+
     if not current_user.is_authenticated:
         return redirect(url_for("auth.login"))
     else:
