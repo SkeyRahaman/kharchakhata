@@ -12,7 +12,7 @@ loginmanager.login_message_category = 'info'
 
 
 with app.app_context():
-    from . import auth
+    from flaskr.authentication import auth
     app.register_blueprint(auth.bp)
 
     from flaskr.route import *

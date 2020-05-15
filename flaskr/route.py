@@ -8,9 +8,6 @@ from flask_login import current_user, login_required
 
 @app.route("/")
 def home():
-    print("I am The Testing part xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", current_user.is_authenticated)
-
-
     if not current_user.is_authenticated:
         return redirect(url_for("auth.login"))
     else:
@@ -20,6 +17,7 @@ def home():
 
 
 @app.route("/enter_transaction", methods=['post'])
+@login_required
 def enter_transaction():
     entry = 1
 
@@ -36,7 +34,7 @@ def enter_transaction():
         time = request.form.get("transaction_time")
     else:
         time = datetime.now().strftime('%H:%M:%S')
-    user_id = session['user_id']
+    user_id = current_user.id
     credit_debit = request.form.get("credit_debit")
     type_ = request.form.get("type")
     sub_type = request.form.get("sub_type")
@@ -152,17 +150,18 @@ def dashboard(month, year):
 def my_account():
     query = """SELECT `users`.`fname` , `users`.`mname`, `users`.`lname` ,`users`.`dob`,`users`.`email`,
     `users`.`phone`,`sex`.`type`,`users`.`sex_id` FROM `users` JOIN `sex` ON `users`.`sex_id` = `sex`.`sex_id` WHERE `users`.`user_id` = {}""".format(
-        session['user_id'])
+        current_user.id)
     user_details = run_in_database(quary=query, fetch='yes')[0]
-    return render_template('my_account.html', user_details=user_details, user_name=session['name'])
+    return render_template('my_account.html', user_details=user_details)
 
 
 @app.route('/about')
 def about():
-    return render_template('about.html', user_name=session['name'])
+    return render_template('about.html')
 
 
 @app.route('/edit_profile', methods=['post'])
+@login_required
 def edit_profile():
     fname = request.form.get("fname").title()
     mname = request.form.get('mname').title()
@@ -174,34 +173,36 @@ def edit_profile():
     query = """UPDATE `users` SET `fname` = '{}', `mname` = '{}', `lname` = '{}', `dob` = '{}',
      `email` = '{}', `phone` = '{}', `sex_id` = '{}' WHERE `users`.`user_id` = {};""".format(fname, mname, lname, dob,
                                                                                              email, phone, sex,
-                                                                                             session['user_id'])
+                                                                                             current_user.id)
     __ = run_in_database(query, commit='yes')
-    session['name'] = fname
+    current_user.fname = fname
     return redirect('/my_account')
 
 
 @app.route('/settings', methods=["get", "post"])
+@login_required
 def settings():
     form_password = Reset_password()
     if form_password.validate_on_submit():
         cpassword = request.form.get('password')
         cnpassword = request.form.get('cnpassword')
 
-        query = """SELECT `password` FROM `users` WHERE `user_id` LIKE {};""".format(session['user_id'])
+        query = """SELECT `password` FROM `users` WHERE `user_id` LIKE {};""".format(current_user.id)
         current_password = run_in_database(quary=query, fetch='yes')
         current_password = current_password[0][0]
 
         if current_password == cpassword:
             query = """UPDATE `users` SET `password`= '{}' WHERE `user_id` LIKE {};""".format(cnpassword,
-                                                                                              session['user_id'])
+                                                                                              current_user.id)
             __ = run_in_database(quary=query, commit='yes')
             flash("Password Updated Successful!.", "success")
         else:
             flash("Current Password Does Not Match!", "danger")
-    return render_template("settings.html", user_name=session['name'], form_password=form_password)
+    return render_template("settings.html", form_password=form_password)
 
 
 @app.route('/get_subtype_of_type/<type_id>')
+@login_required
 def get_sub_type(type_id):
     query = """SELECT 	`type_sub_type`.`sub_type_id`,`sub_type`.`subtype` FROM `type_sub_type`
     JOIN `sub_type` ON
@@ -217,6 +218,7 @@ def get_sub_type(type_id):
 
 
 @app.route('/add_table/<month>/<year>/<date>/<time>')
+@login_required
 def add_table(month, year, date, time):
     date = date.replace("_", "-")
     time = time.replace("_", ":")
@@ -245,7 +247,7 @@ def add_table(month, year, date, time):
 
     WHERE `expences`.`user_id` = {}  {} AND ((`expences`.`date` = '{}' AND `expences`.`time` < '{}') OR  (`expences`.`date` < '{}'))
 
-    ORDER BY `expences`.`date` DESC , `expences`.`time` DESC LIMIT 5 """.format(session['user_id'], month_filter, date,
+    ORDER BY `expences`.`date` DESC , `expences`.`time` DESC LIMIT 5 """.format(current_user.id, month_filter, date,
                                                                                 time, date)
     table_data = run_in_database(quary=query, fetch='yes')
     table_dict = []
@@ -261,98 +263,3 @@ def add_table(month, year, date, time):
             return jsonify(False)
     else:
         return jsonify(False)
-
-
-@app.route('/add_to_table/<table>/<value>')
-def add_to_type(table, value):
-    if 'admin_user_id' in session:
-        if table == "type":
-            col_name = "type"
-        else:
-            col_name = "subtype"
-        query = "SELECT * FROM `{}` WHERE `{}` LIKE '{}';".format(table, col_name, value.title())
-        present = run_in_database(quary=query, fetch='yes')
-        if not present:
-            query = "INSERT INTO `{}`(`{}`) VALUES ('{}');".format(table, col_name, value.title())
-            __ = run_in_database(quary=query, commit='yes')
-            print(True)
-            return jsonify(True)
-        else:
-            print(False)
-            return jsonify(False)
-    else:
-        return redirect('/admin_login')
-
-
-@app.route('/add_relation/<type_id>/<sub_type_id>')
-def add_relation(type_id, sub_type_id):
-    if 'admin_user_id' in session:
-        query = "SELECT `type_id` FROM `type` WHERE `type_id` LIKE {}".format(type_id)
-        result = run_in_database(quary=query, fetch='yes')
-        print(result)
-        if result:
-            query = "SELECT `sub_type_id` FROM `sub_type` WHERE `sub_type_id` LIKE {}".format(sub_type_id)
-            result = run_in_database(quary=query, fetch='yes')
-            if result:
-                query = """SELECT `type_sub_type_id` FROM `type_sub_type` WHERE `type_id` LIKE {} AND `sub_type_id` LIKE {};""".format(
-                    type_id, sub_type_id)
-                result = run_in_database(quary=query, fetch='yes')
-                if not result:
-                    query = "INSERT INTO `type_sub_type`(`type_id`,`sub_type_id`) VALUES ({},{})".format(type_id,
-                                                                                                         sub_type_id)
-                    _ = run_in_database(quary=query, commit='yes')
-                    return jsonify(True)
-                else:
-                    return jsonify("This Relation is already Present!.")
-            else:
-                return jsonify(False)
-        else:
-            return jsonify(False)
-    else:
-        return redirect('/admin_login')
-
-
-@app.route('/update_relation_table_in_admin_page/<type_id>/<sub_type_id>')
-def update_relation_table_in_admin_page(type_id, sub_type_id):
-    if 'admin_user_id' in session:
-        if type_id != "all":
-            start = "WHERE"
-            type_filter = " `type_sub_type`.`type_id` LIKE {} ".format(type_id)
-            mid = "AND"
-        else:
-            start = ""
-            type_filter = ""
-            mid = ""
-
-        if sub_type_id != "all":
-            start = "WHERE"
-            sub_type_filter = " `type_sub_type`.`sub_type_id` LIKE {} ".format(sub_type_id)
-        else:
-            mid = ""
-            sub_type_filter = ""
-
-        query = """SELECT `type_sub_type`.`type_sub_type_id`,`type_sub_type`.`type_id`,`type`.`type`,`type_sub_type`.`sub_type_id`,`sub_type`.`subtype` FROM `type_sub_type` 
-
-        JOIN `type` ON 
-        `type_sub_type`.`type_id` = `type`.`type_id` 
-
-        JOIN `sub_type` ON
-         `type_sub_type`.`sub_type_id` = `sub_type`.`sub_type_id` """ + start + type_filter + mid + sub_type_filter + " ORDER BY `type`.`type` ASC , `sub_type`.`subtype` ASC;"
-        result = run_in_database(quary=query, fetch='yes')
-        return jsonify(result)
-    else:
-        return redirect('/admin_login')
-
-
-@app.route('/delete_relation_table/<relation_id>')
-def delete_relation_table(relation_id):
-    if 'admin_user_id' in session:
-        try:
-            query = """DELETE FROM `type_sub_type` WHERE `type_sub_type`.`type_sub_type_id` LIKE {} ;""".format(
-                relation_id)
-            __ = run_in_database(quary=query, commit='yes')
-            return jsonify(True)
-        except:
-            return jsonify(False)
-    else:
-        return redirect('/admin_login')

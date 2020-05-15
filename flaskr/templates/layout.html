@@ -50,21 +50,19 @@
 	    {% if current_user.is_authenticated %}
 	    	<strong id="my_account"><a href="/my_account">Hi! {{ current_user.fname }}</a></strong>
 	    {% else %}
-	    	<div class="text-right">
+	    	<div>
 	    		<div class="row">
-	    			<div class="col-4">
 	    				<a href="{{ url_for('home')}}">
-	    					<button class="btn text-danger my-auto"><strong>Login</strong></button>
+	    					<button class="btn text-danger"><strong>Login</strong></button>
 	    				</a>
-	    			</div>
-<!-- 	    			<div class="col-1">
-	    				|
-	    			</div> -->
-	    			<div class="col-7">
-	    				<a href="{{url_for('auth.registration_form')}}">
-	    					<button class="btn text-danger my-auto"><strong>Sign Up</strong></button>
+	    			
+	    				<a class="mx-auto" href="{{url_for('auth.registration_form')}}">
+	    					<button class="btn text-danger"><strong>Sign Up</strong></button>
 	    				</a>
-	    			</div>
+	    			
+	    				<a href="{{url_for('about')}}">
+	    					<button class="btn text-danger"><strong>About</strong></button>
+	    				</a>
 	    		</div>
 	    	</div>
 	    {% endif %}

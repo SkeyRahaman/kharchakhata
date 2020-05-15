@@ -27,4 +27,4 @@ class Config:
     # SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:@127.0.0.1/kharchakhata'
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    DEBUG = True
+    DEBUG = False
