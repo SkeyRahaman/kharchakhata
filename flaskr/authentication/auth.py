@@ -1,25 +1,26 @@
+from flask import Blueprint, redirect, render_template, request
 from flaskr.functions import *
-from flask import (Blueprint, redirect, render_template, request, session)
-from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form, Creat_new_password, Reset_password
-from itsdangerous import URLSafeTimedSerializer
-from flask_login import login_user, logout_user
 from flaskr.models import Users
+from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form, Creat_new_password, Reset_password
+from flask_login import login_user, logout_user, login_required, current_user
+from itsdangerous import URLSafeTimedSerializer
 
-bp = Blueprint('auth', __name__)  # url_prefix="/auth"
-
+bp = Blueprint('auth', __name__,
+               template_folder='templates',
+               static_folder='static')  # url_prefix="/auth"
 s = URLSafeTimedSerializer("Very secret key")
 
 
 @bp.route("/login", methods=["get", 'post'])
 def login():
-    print(Users.query.all()[0])
     form = Login_form()
     if form.validate_on_submit():
         password = request.form.get('password')
-        # login_with(email=email, password=password)
         user = Users.query.filter_by(email=request.form.get('email').lower()).first()
         if user and user.password == password:
             login_user(user, remember=request.form.get("remember"))
+        else:
+            flash("Email address and password does not match!.", "info")
         return redirect("/")
     else:
         return render_template("login.html", title="Login", form=form)
@@ -30,29 +31,22 @@ def registration_form():
     form = RegistrationForm()
     if form.validate_on_submit():
         email = request.form.get('email').lower()
-        fname, email = check_email_in_databace(email)
-        if not email:
-            fname = request.form.get('fname').title()
-            mname = request.form.get('mname').title()
-            lname = request.form.get('lname').title()
-            dob = request.form.get('dob')
-            password = request.form.get('password')
-            quary = """INSERT INTO `users`(`fname`,`mname`,`lname`,`dob`,`email`,`password`) VALUES('{}','{}','{}','{}','{}',{})""".format(
-                fname,
-                mname,
-                lname,
-                dob, email,
-                password)
-            try:
-                result = run_in_database(quary=quary, commit='yes')
-            except:
-                result = False
-            if result:
-                login_with(email=email, password=password)
-                return redirect("/")
-        else:
-            flash("Email address already registered with username as " + fname + "!.", "danger")
+        fname = request.form.get('fname').title()
+        mname = request.form.get('mname').title()
+        lname = request.form.get('lname').title()
+        dob = request.form.get('dob')
+        password = request.form.get('password')
+        quary = """INSERT INTO `users`(`fname`,`mname`,`lname`,`dob`,`email`,`password`) VALUES('{}','{}','{}','{}','{}',{})""".format(
+            fname,
+            mname,
+            lname,
+            dob, email,
+            password)
+        if run_in_database(quary=quary, commit='yes'):
+            flash("Registration Successful!. Please Login with Your Email and Password!.", "success")
             return redirect("/")
+        else:
+            flash("Internal Database Problem!.", "danger")
     return render_template("register.html", title="Register", form=form)
 
 
@@ -61,18 +55,12 @@ def forgot_password():
     form = Forgot_password_form()
     if form.validate_on_submit():
         email = request.form.get('email').lower()
-        name, email = check_email_in_databace(email)
-        if name:
-            token = s.dumps(email, salt="this_is_the_email")
-            reset_url = "http://" + str(request.host) + "/reset_password/" + str(token)
-            print(reset_url)
-            send_mail(to=email, name=name, reset_url=reset_url)
-            flash("URL to reset your password is send to " + email + ", Visit your Email to Reset Your Password!",
-                  "success")
-            return redirect('/')
-        else:
-            flash("Email Address Not Registered!", "danger")
-            redirect("/")
+        token = s.dumps(email, salt="this_is_the_email")
+        reset_url = "http://" + str(request.host) + "/reset_password/" + str(token)
+        send_mail(to=email, name=Users.query.filter_by(email=email).first().fname, reset_url=reset_url)
+        flash("URL to reset your password is send to " + email + ", Visit your Email to Reset Your Password!",
+              "success")
+        return redirect('/')
     else:
         return render_template("forgot_password_one.html", form=form)
 
@@ -97,19 +85,15 @@ def reset_password_with_token(token):
 
 
 @bp.route('/password_validation', methods=['GET', 'POST'])
+@login_required
 def password_validation():
     form = Reset_password()
     if form.validate_on_submit():
         cpassword = request.form.get('password')
         cnpassword = request.form.get('cnpassword')
-
-        query = """SELECT `password` FROM `users` WHERE `user_id` LIKE {};""".format(session['user_id'])
-        current_password = run_in_database(quary=query, fetch='yes')
-        current_password = current_password[0][0]
-
-        if current_password == cpassword:
+        if current_user.password == cpassword:
             query = """UPDATE `users` SET `password`= '{}' WHERE `user_id` LIKE {};""".format(cnpassword,
-                                                                                              session['user_id'])
+                                                                                              current_user.id)
             __ = run_in_database(quary=query, commit='yes')
             flash("Password Updated Successful!.", "success")
         else:
@@ -118,6 +102,7 @@ def password_validation():
 
 
 @bp.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect('/')
