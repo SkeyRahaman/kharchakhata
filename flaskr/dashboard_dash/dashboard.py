@@ -2,10 +2,22 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from flaskr.functions import *
-from flaskr.functions import *
+from flask_login import current_user
+from flask import session
 
 
 def create_dashboard(server):
+    # try:
+    #     print(session['user_name'])
+    #     # if current_user.is_authenticated:
+    #     #     name = current_user
+    #     # else:
+    #     name = session['user_name']
+    # except Exception as s:
+    #     for i in range(10):
+    #         print(i)
+    #     print(s)
+    #     name = "not log in"
     external_stylesheets = [
         {
             'rel': "stylesheet",

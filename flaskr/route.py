@@ -1,9 +1,12 @@
 from flask import redirect, render_template, request, url_for, jsonify
-from flaskr import app
+from flaskr import app, bcrypt, db
 from flaskr.functions import *
 from datetime import datetime as dt
 from flaskr.forms import Reset_password
 from flask_login import current_user, login_required
+
+
+
 
 
 @app.route("/")
@@ -185,16 +188,9 @@ def settings():
     form_password = Reset_password()
     if form_password.validate_on_submit():
         cpassword = request.form.get('password')
-        cnpassword = request.form.get('cnpassword')
-
-        query = """SELECT `password` FROM `users` WHERE `user_id` LIKE {};""".format(current_user.id)
-        current_password = run_in_database(quary=query, fetch='yes')
-        current_password = current_password[0][0]
-
-        if current_password == cpassword:
-            query = """UPDATE `users` SET `password`= '{}' WHERE `user_id` LIKE {};""".format(cnpassword,
-                                                                                              current_user.id)
-            __ = run_in_database(quary=query, commit='yes')
+        if bcrypt.check_password_hash(current_user.password, cpassword):
+            current_user.password = bcrypt.generate_password_hash(request.form.get('cnpassword')).decode('utf-8')
+            db.session.commit()
             flash("Password Updated Successful!.", "success")
         else:
             flash("Current Password Does Not Match!", "danger")

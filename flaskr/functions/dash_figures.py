@@ -1,4 +1,6 @@
 import plotly.graph_objects as go
+from flask_login import current_user
+from flask import session
 from flaskr.functions import *
 import calendar
 import numpy as np

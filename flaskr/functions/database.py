@@ -3,6 +3,7 @@ from datetime import datetime
 import config
 import mysql.connector
 import pandas as pd
+from flask_login import current_user
 # from application import login_manager
 
 
