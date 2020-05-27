@@ -2,11 +2,12 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from flaskr.functions import *
+from flaskr import app
 from flask_login import current_user
 from flask import session
 
 
-def create_dashboard(server):
+def create_dashboard(server=app):
     # try:
     #     print(session['user_name'])
     #     # if current_user.is_authenticated:

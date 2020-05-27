@@ -1,12 +1,11 @@
 from flask import redirect, render_template, request, url_for, jsonify
 from flaskr import app, bcrypt, db
 from flaskr.functions import *
+from flaskr.models import Expences, Type_subtype, Type, Frequency, Payment_medium
 from datetime import datetime as dt
-from flaskr.forms import Reset_password
+from flaskr.forms import Reset_password, Expence_form
 from flask_login import current_user, login_required
-
-
-
+from datetime import datetime
 
 
 @app.route("/")
@@ -17,6 +16,45 @@ def home():
         month = datetime.now().strftime("%B")
         year = datetime.now().year
         return redirect("/dashboard/{}/{}".format(month, year))
+
+
+@app.route("/add_expence", methods=["GET", "POST"])
+@login_required
+def add_expence():
+    form = Expence_form()
+    form.type.choices = [(type.id, type.name) for type in Type.query.all()]
+    form.frequency.choices = [(fre.id, fre.name) for fre in Frequency.query.all()]
+    form.payment_method.choices = [(payment_method.id, payment_method.name) for payment_method in
+                                   Payment_medium.query.all()]
+    if form.validate_on_submit():
+        expence_name = request.form.get("name").title()
+        date = request.form.get("date")
+        amount = request.form.get("amount")
+        time = request.form.get("time")
+        date_time = datetime.strptime((date + " " + time), '%Y-%m-%d %H:%M')
+        user_id = current_user.id
+        transaction_type = request.form.get("transaction_type")
+        type_subtype = request.form.get("subtype")
+        frequency = request.form.get("frequency")
+        payment_method = request.form.get("payment_method")
+        comment = request.form.get("comment")
+        if transaction_type == "1":
+            debit = amount
+            credit = 0
+        else:
+            debit = 0
+            credit = amount
+        new_transaction = Expences(name=expence_name, date_time=date_time,
+                                   type_subtype=type_subtype, frequency=frequency,
+                                   payment=payment_method, credit=credit,
+                                   debit=debit, user=user_id,
+                                   comment=comment)
+        db.session.add(new_transaction)
+        db.session.commit()
+        flash("New Transaction Added!", "success")
+        return redirect("/")
+
+    return render_template("add_expence.html", form=form)
 
 
 @app.route("/enter_transaction", methods=['post'])
@@ -43,6 +81,7 @@ def enter_transaction():
     sub_type = request.form.get("sub_type")
     frequency = request.form.get("frequency")
     payment_method = request.form.get("pay_method")
+
     query = """INSERT INTO `expences` 
             (`expence_name`,`date`,`amount`,`time`,`user_id`,`credit_debit_id`,`type_id`,`sub_type_id`,`frequency_id`,`payment_medium_id`)
              VALUES('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}')""".format(expence_name, date, amount, time,
@@ -148,16 +187,6 @@ def dashboard(month, year):
                            interval=interval)
 
 
-@app.route('/my_account')
-@login_required
-def my_account():
-    query = """SELECT `users`.`fname` , `users`.`mname`, `users`.`lname` ,`users`.`dob`,`users`.`email`,
-    `users`.`phone`,`sex`.`type`,`users`.`sex_id` FROM `users` JOIN `sex` ON `users`.`sex_id` = `sex`.`sex_id` WHERE `users`.`user_id` = {}""".format(
-        current_user.id)
-    user_details = run_in_database(quary=query, fetch='yes')[0]
-    return render_template('my_account.html', user_details=user_details)
-
-
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -200,17 +229,15 @@ def settings():
 @app.route('/get_subtype_of_type/<type_id>')
 @login_required
 def get_sub_type(type_id):
-    query = """SELECT 	`type_sub_type`.`sub_type_id`,`sub_type`.`subtype` FROM `type_sub_type`
-    JOIN `sub_type` ON
-    `type_sub_type`.`sub_type_id` = `sub_type`.`sub_type_id` WHERE `type_sub_type`.`type_id` = {}  ORDER BY `sub_type`.`subtype` ASC;""".format(
-        type_id)
-    result = run_in_database(quary=query, fetch='yes')
-    return_obj = []
-    for subtype in result:
-        obj = {'id': subtype[0], 'subtype': subtype[1]}
-        return_obj.append(obj)
-
-    return jsonify(return_obj)
+    subtypes = Type_subtype.query.filter_by(type_id=type_id)
+    subtype_obj = []
+    for i in subtypes:
+        obj = {
+            'id': int(i.id),
+            'subtype': str(i.subtype)
+        }
+        subtype_obj.append(obj)
+    return jsonify(subtype_obj)
 
 
 @app.route('/add_table/<month>/<year>/<date>/<time>')

@@ -1,12 +1,18 @@
-from flask_bcrypt import Bcrypt
-from flask import Flask
+class test():
+    a = 0
+    b = ""
 
-app = Flask(__name__)
+    def __init__(self, b="default"):
+        self.b = b
 
-bcr = Bcrypt(app)
-pas = bcr.generate_password_hash("9038383080").decode('utf-8')
-a = True
-while a:
-    a = input("Password:-")
-    print(bcr.generate_password_hash(a).decode('utf-8'))
+    def printa(self):
+        print(self.b)
 
+    def printb(self):
+        print("hi")
+
+
+sa = test("sa")
+ba = test("ba")
+test.printa(sa)
+test.printa(ba)

@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, render_template, request
 from flaskr import app, db, bcrypt
 from flaskr.functions import *
-from flaskr.models import Users
+from flaskr.models import Users, Sex
 from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form, Creat_new_password, Reset_password
 from flask_login import login_user, logout_user, login_required, current_user
 from itsdangerous import URLSafeTimedSerializer
@@ -21,6 +21,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user, remember=request.form.get("remember"))
             session['user_name'] = user.fname
+            # app = create_dashboard()
         else:
             flash("Email address and password does not match!.", "info")
         return redirect("/")
@@ -31,16 +32,19 @@ def login():
 @bp.route('/registration_form', methods=['GET', 'POST'])
 def registration_form():
     form = RegistrationForm()
+    form.sex.choices = [(str(sex.id), sex.type) for sex in Sex.query.all()]
     if form.validate_on_submit():
         email = request.form.get('email').lower()
         fname = request.form.get('fname').title()
         mname = request.form.get('mname').title()
         lname = request.form.get('lname').title()
         dob = request.form.get('dob')
+        phone = request.form.get('phone')
         password = bcrypt.generate_password_hash(request.form.get('password')).decode('utf-8')
         new_user = Users(email=email, fname=fname,
                          mname=mname, lname=lname,
-                         dob=dob, password=password)
+                         dob=dob, password=password,
+                         phone=phone)
         db.session.add(new_user)
         db.session.commit()
         flash("Registration Successful!. Please Login with Your Email and Password!.", "success")
@@ -81,6 +85,12 @@ def reset_password_with_token(token):
         return redirect("/")
     else:
         return render_template("reset_password.html", form=form, )
+
+
+@bp.route('/my_account')
+@login_required
+def my_account(): 
+    return render_template('my_account.html')
 
 
 @bp.route('/logout')

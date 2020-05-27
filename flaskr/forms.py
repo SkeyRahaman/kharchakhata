@@ -1,8 +1,27 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, SelectField, TimeField, SubmitField, BooleanField
+from wtforms_components import TimeField
+from wtforms import StringField, PasswordField, SelectField, SubmitField, BooleanField, FloatField, TextAreaField, \
+    IntegerField
 from wtforms.fields.html5 import DateField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange, ValidationError
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flaskr.models import Users
+
+
+class Expence_form(FlaskForm):
+    name = StringField("Expence Name", validators=[Length(min=3, max=20)])
+    date = DateField("Date", validators=[DataRequired()])
+    today = BooleanField("Today")
+    time = TimeField('Time', validators=[DataRequired()])
+    now = BooleanField("Now")
+    type = SelectField("Type", choices=[], validate_choice=False)
+    subtype = SelectField("Subtype", choices=[], validate_choice=False)
+    frequency = SelectField("Frequency", choices=[], validate_choice=False)
+    payment_method = SelectField("Payment Method", choices=[], validate_choice=False)
+    transaction_type = SelectField("Transaction Type", choices=[("1", "Debit"), ("2", "Credit")])
+    amount = FloatField("Amount")
+    comment = TextAreaField('Comment', render_kw={"rows": 5, "cols": 11}, validators=[Length(max=95)])
+
+    submit = SubmitField("Save")
 
 
 class Forgot_password_form(FlaskForm):
@@ -38,16 +57,18 @@ class RegistrationForm(FlaskForm):
                         validators=[
                             DataRequired(),
                             Length(min=2, max=20)
-                        ])
+                        ],
+                        default="def")
     mname = StringField('Middle Name')
     lname = StringField('Last Name',
                         validators=[
                             DataRequired(),
                             Length(min=2, max=20)
                         ])
-
+    sex = SelectField("Gender", choices=[])
     email = StringField('Email', validators=[DataRequired(), Email()])
     dob = DateField("Date of Birth", validators=[DataRequired()])
+    phone = StringField("Phone Number (Along with country code).", validators=[Length(max=14)])
     password = PasswordField('Password',
                              validators=[DataRequired(), Length(min=6, max=20)])
     cpassword = PasswordField('Confirm Password',

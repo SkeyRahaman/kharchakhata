@@ -1,0 +1,280 @@
+{% extends "layout.html" %}
+
+{% block script %}
+<script type="text/javascript">
+	let date_check = document.getElementsByClassName('date_check')[0];
+	let date = document.getElementsByClassName('date')[0];
+	let time_check = document.getElementsByClassName('time_check')[0];
+	let time = document.getElementsByClassName('time')[0];
+	let type = document.getElementsByClassName('type')[0]
+	const getTwoDigits = (value) => value < 10 ? `0${value}` : value;
+	date_check.onchange = function() {
+		date_check_function();
+	}
+	time_check.onchange = function() {
+		time_check_function();
+	}
+	type.onchange = function() {
+		get_subtype();
+	}
+	const get_subtype = () => {
+		type = document.getElementsByClassName('type')[0]
+		fetch('/get_subtype_of_type/'  + type.value)
+		.then(function(responce){
+			responce.json().then(function(data) {
+				var sel = document.getElementsByClassName('sub_type')[0];
+				if (sel.options != null) {
+					var length = sel.options.length;
+					for (i = length-1; i >= 0; i--) {
+					  sel.options[i] = null;
+					}
+				}
+				length = data.length
+				for (i = 0;i<length;i++) {
+					var opt = document.createElement('option');
+					opt.appendChild( document.createTextNode(data[i]['subtype']) );
+					opt.value = data[i]['id'];
+					sel.appendChild(opt);
+				}
+			})
+		});
+	};
+	const date_check_function = () => {
+		document.getElementById('date').readOnly =  date_check.checked;
+		if (date_check.checked) {
+			document.getElementById('date').readonly = "readonly"
+			date.value = new Date().toISOString().substr(0, 10);
+		}
+	}
+	const time_check_function = () => {
+		document.getElementById('time').readOnly = time_check.checked;
+		if (time_check.checked) {
+			time.value = getTwoDigits(new Date().getHours()) + ':' + getTwoDigits(new Date().getMinutes());
+			console.log("HI!!");
+		}
+	}
+	time_check.checked = true;
+	date_check.checked = true;
+	date_check_function();
+	time_check_function();
+
+</script>
+{% endblock %}
+
+{% block content %}
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+	            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="navbar-toggler-icon"></span>
+	    </button>
+	    <div class="collapse navbar-collapse" id="navbarNav">
+	        <ul class="navbar-nav">
+	            <li class="nav-item">
+	                <a class="nav-link" href="/"><strong>Dashboard</strong></a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/dashapp/"><strong>Charts</strong></a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/my_account"><strong>My Account</strong></a>
+	            </li>
+	            <li class="nav-item active">
+	                <a class="nav-link" href="/add_expence"><strong>Add Transaction</strong>
+	                </a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/about"><strong>About</strong></a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/settings"><strong>Settings</strong></a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/logout"><strong>Logout</strong></a>
+	            </li>
+	            <li class="nav-item">
+	                <div class="btn-group">
+	                    <button type="button" class="btn btn-default dropdown-toggle nav-link" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="true">
+	                        Select Month
+	                    </button>
+	                    <div class="dropdown-menu">
+	                    	<a class="dropdown-item" href="/dashboard/all/all">All</a>
+	                        {% for i in months %}
+	                        <a class="dropdown-item" href="/dashboard/{{i[0]}}/{{i[1]}}">{{i[0]}}  {{i[1]}}</a>
+	                        {% endfor %}
+	                    </div>
+	                </div>
+	            </li>
+	        </ul>
+	    </div>
+	</nav>
+
+
+
+
+
+
+<div class="row m-4">
+	<div class="col-7">
+		<div class="container mx-4 card p-3">
+			<form method="POST" action="">
+				{{ form.hidden_tag() }}
+				<fieldset class="form-group">
+					<legend class="border-bottom mb-4">
+						Add Expence
+					</legend>
+					<div class="form-group">
+						<strong>{{ form.name.label(class="form-control-label")}}</strong>
+						{% if form.name.errors %}
+							{{ form.name(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.name.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.name(class="form-control form-control-lg")}}
+						{% endif %}
+						<small class="form-text text-muted required">*Requires</small>
+					</div>
+					<div class="form-group">
+						<strong>{{ form.date.label(class="form-control-label")}}</strong>
+						<div class="form-check">
+							{{ form.today(class="form-check-input date_check")}}
+							{{ form.today.label(class="form-control-label")}}
+						</div>
+						{% if form.date.errors %}
+							{{ form.date(class="form-control form-control-lg is-invalid date")}}
+							<div>
+								{% for error in form.date.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.date(class="form-control form-control-lg date")}}
+						{% endif %}
+					</div>
+					<div class="form-group">
+						<strong>{{ form.time.label(class="form-control-label")}}</strong>
+						<div class="form-check">
+							{{ form.now(class="form-check-input time_check")}}
+							{{ form.now.label(class="form-control-label")}}
+						</div>
+						{% if form.time.errors %}
+							{{ form.time(class="form-control form-control-lg is-invalid time")}}
+							<div>
+								{% for error in form.time.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.time(class="form-control form-control-lg time")}}
+						{% endif %}
+					</div>
+					<div class="form-group">
+						<strong>{{ form.type.label(class="form-control-label")}}</strong>
+						{% if form.type.errors %}
+							{{ form.type(class="form-control form-control-lg is-invalid type")}}
+							<div>
+								{% for error in form.type.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.type(class="form-control form-control-lg type")}}
+						{% endif %}
+					</div>
+
+
+					<div class="form-group">
+						<strong>{{ form.subtype.label(class="form-control-label")}}</strong>
+						{% if form.subtype.errors %}
+							{{ form.subtype(class="form-control form-control-lg is-invalid sub_type")}}
+							<div>
+								{% for error in form.subtype.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.subtype(class="form-control form-control-lg sub_type")}}
+						{% endif %}
+					</div>
+
+
+					<div class="form-group">
+						<strong>{{ form.frequency.label(class="form-control-label")}}</strong>
+						{% if form.frequency.errors %}
+							{{ form.frequency(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.frequency.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.frequency(class="form-control form-control-lg")}}
+						{% endif %}
+					</div>
+					<div class="form-group">
+						<strong>{{ form.payment_method.label(class="form-control-label")}}</strong>
+						{% if form.payment_method.errors %}
+							{{ form.payment_method(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.payment_method.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.payment_method(class="form-control form-control-lg")}}
+						{% endif %}
+					</div>
+					<div class="form-group">
+						<strong>{{ form.transaction_type.label(class="form-control-label")}}</strong>
+						{% if form.transaction_type.errors %}
+							{{ form.transaction_type(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.transaction_type.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.transaction_type(class="form-control form-control-lg")}}
+						{% endif %}
+					</div>
+					<div class="form-group">
+						<strong>{{ form.amount.label(class="form-control-label")}}</strong>
+						{% if form.amount.errors %}
+							{{ form.amount(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.amount.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.amount(class="form-control form-control-lg")}}
+						{% endif %}
+						<small class="form-text text-muted required">*Requires</small>
+					</div>
+					<div class="form-group">
+						<strong>{{ form.comment.label(class="form-control-label")}}</strong>
+						{% if form.comment.errors %}
+							{{ form.comment(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.comment.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.comment(class="form-control form-control-lg")}}
+						{% endif %}
+					</div>
+				</fieldset>
+				<div class="form-group">
+					{{ form.submit(class='btn btn-success float-right')}}
+				</div>
+			</form>					
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,236 @@
+<script type="text/javascript">
+	document.getElementById("add_transsetion_up").addEventListener("click" , function(){
+	document.getElementById("new_entry_form").style.display = "block";
+});
+
+document.getElementById("add_transsetion_down").addEventListener("click" , function(){
+	document.getElementById("new_entry_form").style.display = "block";
+});
+document.getElementById("close_new_entry_form").addEventListener("click" , function(){
+	document.getElementById("new_entry_form").style.display = "none";
+});
+
+
+const get_subtype = () => {
+	type = document.getElementById('type')
+
+	fetch('/get_subtype_of_type/'  + type.value)
+	.then(function(responce){
+		responce.json().then(function(data) {
+			var sel = document.getElementById('sub_type');
+			var length = sel.options.length;
+			for (i = length-1; i >= 0; i--) {
+			  sel.options[i] = null;
+			}
+			length = data.length
+			
+			for (i = 0;i<length;i++) {
+				var opt = document.createElement('option');
+				opt.appendChild( document.createTextNode(data[i].subtype) );
+				opt.value = data[i].id;
+				sel.appendChild(opt);
+			}
+		})
+	});
+};
+
+document.getElementById('date_today').onchange = function() {
+	document.getElementById('transaction_date').disabled  = this.checked;
+};
+document.getElementById('time_now').onchange = function() {
+	document.getElementById('transaction_time').disabled  = this.checked;
+};
+const check_new_transaction = () =>{
+	expence_name = document.getElementById("expence_name_first").value;
+	amount = document.getElementById("amount_first").value;
+	if(expence_name.length > 0 && amount.length >0) {
+		sel = document.getElementById("c_d_first");
+		c_d = sel.options[sel.selectedIndex].text;
+		sel = document.getElementById("type");
+		type = sel.options[sel.selectedIndex].text;
+		sel = document.getElementById("sub_type");
+		sub_type = sel.options[sel.selectedIndex].text;
+		sel = document.getElementById("frequency");
+		frequency = sel.options[sel.selectedIndex].text;
+		sel = document.getElementById("sel1");
+		payment_medium = sel.options[sel.selectedIndex].text;
+		comment = document.getElementById("comment_first").value;
+		if(document.getElementById("date_today").checked === true){
+			
+			date = "Current Date";
+		}
+		else{
+			date = document.getElementById("transaction_date").value;
+		}
+		if(document.getElementById("time_now").checked === true){
+			
+			time = "Current Date";
+		}
+		else{
+			time = document.getElementById("transaction_time").value;
+		}
+		
+
+
+
+
+
+		document.getElementById("expence_name_con").innerHTML = expence_name;
+		document.getElementById("date_con").innerHTML = date;
+		document.getElementById("time_con").innerHTML = time;
+		document.getElementById("c_d_con").innerHTML = c_d;
+		document.getElementById("type_con").innerHTML = type;
+		document.getElementById("sub_type_con").innerHTML = sub_type;
+		document.getElementById("frequency_con").innerHTML = frequency;
+		document.getElementById("pay_method_con").innerHTML = payment_medium;
+		document.getElementById("amount_con").innerHTML = amount;
+		document.getElementById("comment_con").innerHTML = comment;
+		document.getElementById("entry_conformation").style.display = "block";
+		document.getElementById("new_entry_form").style.display = "none";
+	}
+	else{
+		alert("Please Fill All The Required Entry.");
+	}
+	
+};
+
+const go_back_to_edit = () => {
+	document.getElementById("entry_conformation").style.display = "none";
+	document.getElementById("new_entry_form").style.display = "block";
+};
+
+</script>	
+	<div class="entry_form_container">
+		<div class="new_entry_form" id="new_entry_form">
+			<form name="new_entry_form" method="post" action="/enter_transaction" id="new_entry_form_o">
+				<div class="expence_heading">
+					<strong>Add New Transaction:-</strong>
+					<div>
+						<label class="btn btn-danger float-right" id="close_new_entry_form" type="button">Close</label>
+					</div>
+				</div>				
+				<div class="form-group">
+					<label  for="ex_name"><strong>Expence name:-</strong></label>
+					<input class="form-control" type="text" name="ex_name" id="expence_name_first">
+					<small class="form-text text-muted required">*Requires</small>
+				</div>
+				<div>
+					<label><strong>Date:-</strong></label>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="today_check" id="date_today" checked>
+							Today.
+						</label>
+					</div>
+					<input type="date" name="transaction_date" id="transaction_date" disabled >
+				</div><br>
+				<div>
+					<label><strong>Time:-</strong></label>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="time_check" id="time_now" checked>
+							Now.
+						</label>
+					</div>
+					<input type="time" name="transaction_time" id="transaction_time" disabled >
+				</div><br>
+				<div class="form-group">
+					<label  for="credit_debit"><strong>Credit/Debit:-</strong></label>
+					<select class="form-control" name="credit_debit" id="c_d_first">
+						<option value="1">Credit</option>
+						<option value="2">Debit</option>
+					</select>
+					<small class="form-text text-muted">*Credit is Your Income.<br>*Debit is your Expenditure.</small>
+				</div>
+				<div class="form-group">
+					<label for="type"><strong>Type:-</strong></label>
+					<select class="form-control" name="type" onchange="get_subtype()" id="type">
+						{% for i in type_list%}
+							<option value={{i[0]}}>{{i[1]}}</option>
+						{% endfor%}
+					</select>
+				</div>
+				<script>get_subtype()</script>
+				<div class="form-group">
+					<label for="sub_type"><strong>Sub-Type:-</strong></label>
+					<select class="form-control" name="sub_type" id="sub_type">
+						{% for i in sub_type_list %}
+							<option value={{i[0]}}>{{i[1]}}</option>
+						{% endfor%}
+					</select>
+				</div>
+				<div class="form-group">
+					<label  for="frequency"><strong>Frequency:-</strong></label>
+					<select class="form-control" name="frequency" id="frequency">
+						{% for i in frequency %}
+							<option value={{i[0]}}>{{i[1]}}</option>
+						{% endfor%}
+					</select>
+				</div>
+				<div class="form-group">
+					<label  for="ex_name"><strong>Payment Method:-</strong></label>
+					<select class="form-control" id="sel1" name="pay_method">
+						{% for i in payment_medium %}
+							<option value={{i[0]}}>{{i[1]}}</option>
+						{% endfor%}
+					</select>
+				</div>
+				<div class="form-group">
+					<label  for="amount"><strong>Amount:-</strong></label>
+					<input class="form-control" type="number" name="amount" id="amount_first">
+					<small class="form-text text-muted required">*Requires</small>
+				</div>
+				<div class="form-group">
+					<label for="comment"><strong>Comment:-</strong></label>
+					<textarea class="form-control" rows="5" name="comment"  placeholder="Under 250 charecter." id="comment_first" value="Hi"></textarea>
+				</div>
+
+
+
+				<button type="button" class="btn btn-outline-success" onclick="check_new_transaction()">Add</button>
+			</form>
+
+
+			
+		</div>
+		<div class="entry_conformation" id="entry_conformation">
+			<button type="button" class="btn btn-danger float-right" onclick="go_back_to_edit()"> Close</button>
+
+			<h3>Transaction Details</h3>
+
+			<br>
+			<label>Expence Name:-</label>
+			<label><strong id="expence_name_con">Text</strong></label><br>
+
+			<label>Date:-</label>
+			<label><strong id="date_con">Text</strong></label><br>
+			
+			<label>Time:-</label>
+			<label><strong id="time_con">Text</strong></label><br>
+			
+			<label>Credit/Debit:-</label>
+			<label><strong id="c_d_con">Text</strong></label><br>
+			
+			<label>Type:-</label>
+			<label><strong id="type_con">Text</strong></label><br>
+			
+			<label>Sub-Type:-</label>
+			<label><strong id="sub_type_con">Text</strong></label><br>
+			
+			<label>Frequency:-</label>
+			<label><strong id="frequency_con">Text</strong></label><br>
+			
+			<label>Payment Method:-</label>
+			<label><strong id="pay_method_con">Text</strong></label><br>
+			
+			<label>Amount:-</label>
+			<label><strong id="amount_con">Text</strong></label><br>
+			
+			<label>Comment:-</label>
+			<label><strong id="comment_con">Text</strong></label><br>
+			
+
+			<button type="submit" class="btn btn-success float-right" form="new_entry_form_o">ADD.</button>
+			<button type="button" class="btn btn-danger float-left" onclick="go_back_to_edit()">Edit Details</button>
+		</div>
+	</div>

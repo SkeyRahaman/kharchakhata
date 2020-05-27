@@ -22,9 +22,4 @@ with app.app_context():
 
     from flaskr.dashboard_dash.dashboard import create_dashboard
 
-
-    @app.route("/dashapp-new")
-    def dashapp():
-        return app.index()
-
     app = create_dashboard(app)

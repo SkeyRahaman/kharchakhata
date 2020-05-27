@@ -22,6 +22,10 @@
 	                <a class="nav-link" href="/my_account"><strong>My Account</strong></a>
 	            </li>
 	            <li class="nav-item">
+	                <a class="nav-link" href="/add_expence"><strong>Add Transaction</strong>
+	                </a>
+	            </li>
+	            <li class="nav-item">
 	                <a class="nav-link" href="/about"><strong>About</strong></a>
 	            </li>
 	            <li class="nav-item">
@@ -46,19 +50,19 @@
 					<form name="profile_form" method="post" action="/edit_profile" >
 							
 							<label for="first_name">First name...</label>
-							<input id="first_name" class="form-control"  name="fname" value="{{user_details[0]}}">
+							<input id="first_name" class="form-control"  name="fname" value="{{current_user.fname}}">
 
 							<label for="middle_name" required/>Middle name...</label>
-							<input id="middle_name" class="form-control"  name="mname" value="{{user_details[1]}}">
+							<input id="middle_name" class="form-control"  name="mname" value="{{current_user.mname}}">
 
 							<label for="last_name">Last name...</label>
-						 	<input id="last_name" class="form-control"  name="lname" value="{{user_details[2]}}">
+						 	<input id="last_name" class="form-control"  name="lname" value="{{current_user.lname}}">
 						
 							<label for="email_address">E-mail address...</label>
-							<input id="email_address" class="form-control"  name="remail" value="{{user_details[4]}}">
+							<input id="email_address" class="form-control"  name="remail" value="{{current_user.email}}">
 
 							<label for="phone_number">Phone number...</label>
-							<input id="phone_number" class="form-control"  name="rphone" value="{{user_details[5]}}">
+							<input id="phone_number" class="form-control"  name="rphone" value="{{current_user.phone}}">
 						
 							<br>
 
@@ -70,7 +74,7 @@
 										<div class="container-fluid">
 											<div class="row">
 													<div class="col-9">
-														<label>Date of birth :- {{user_details[3]}}    </label>
+														<label>Date of birth :- {{current_user.dob}}    </label>
 													</div>
 													<div class="col-3">
 														<label class="btn btn-sm btn-outline-secondary" id="dob_edit">EDIT</label>
@@ -83,7 +87,7 @@
 
 													<div id="dob_date">
 											 			<div class="col-5">
-											 				<input  class="form-conrol" type="date" name="dob" value="{{user_details[3]}}">
+											 				<input  class="form-conrol" type="date" name="dob" value="{{current_user.dob}}">
 											 			</div>
 											 			<div class="col-7">
 											 				<label class="btn btn-sm btn-outline-danger" id="dob_cancel">Cancel</label>
@@ -105,7 +109,7 @@
 								 	<div class="form-group col-sm-8 col-lg-4 col-md-4 right_side_gap">
 								 		<div class="container-fluid row">
 								 			<div class="col-6">
-									 			<label>Gender:- {{user_details[6].upper()  }}</label>
+									 			<label>Gender:- {{current_user.sex.type.upper()  }}</label>
 									 		</div>
 									 		<div class="col-4"> 
 									 			<lable class="btn btn-sm btn-outline-secondary" id="sex_edit">EDIT</lable>
@@ -120,7 +124,7 @@
 													<div class="row">	
 														<div class="col-4">
 													 		<select id="sex" name="sex" class="form-conrol" name="sex">
-													 			<option value="{{user_details[7]}}">Select</option>
+													 			<option value="{{current_user.sex}}">Select</option>
 																<option value="2">Female</option>
 																<option value="1">Male</option>
 																<option value="3">Others</option>
