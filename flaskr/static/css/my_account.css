@@ -1,24 +1,3 @@
-.heading {
-	background-image: linear-gradient(to right , #1FBFCA , #E8C718);
-	font-size: 1.5vw;
-}
-.heading a{
-	color: #DC004B;
-	font-size: 2vw;
-}
-.heading a:hover{
-	color: #DC004B;
-}
-
-.nav-link {
-	font-size: 15px;
-	transition: font-size 1s;
-}
-
-.nav-link:hover{
-	font-size: 17px;
-}
-
 .details label{
 	font-weight: bold;
 }

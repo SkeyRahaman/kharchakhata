@@ -2,7 +2,8 @@ from flask import Blueprint, redirect, render_template, request
 from flaskr import app, db, bcrypt
 from flaskr.functions import *
 from flaskr.models import Users, Sex
-from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form, Creat_new_password, Reset_password
+from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form,\
+    Creat_new_password, Reset_password, Edit_profile_form
 from flask_login import login_user, logout_user, login_required, current_user
 from itsdangerous import URLSafeTimedSerializer
 
@@ -21,7 +22,6 @@ def login():
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user, remember=request.form.get("remember"))
             session['user_name'] = user.fname
-            # app = create_dashboard()
         else:
             flash("Email address and password does not match!.", "info")
         return redirect("/")
@@ -32,7 +32,6 @@ def login():
 @bp.route('/registration_form', methods=['GET', 'POST'])
 def registration_form():
     form = RegistrationForm()
-    form.sex.choices = [(str(sex.id), sex.type) for sex in Sex.query.all()]
     if form.validate_on_submit():
         email = request.form.get('email').lower()
         fname = request.form.get('fname').title()
@@ -60,7 +59,7 @@ def forgot_password():
         token = s.dumps(email, salt="this_is_the_email")
         reset_url = "http://" + str(request.host) + "/reset_password/" + str(token)
         print(reset_url)
-        #send_mail(to=email, name=Users.query.filter_by(email=email).first().fname, reset_url=reset_url)
+        # send_mail(to=email, name=Users.query.filter_by(email=email).first().fname, reset_url=reset_url)
         flash("URL to reset your password is send to " + email + ", Visit your Email to Reset Your Password!",
               "success")
         return redirect('/')
@@ -87,10 +86,27 @@ def reset_password_with_token(token):
         return render_template("reset_password.html", form=form, )
 
 
-@bp.route('/my_account')
+@bp.route('/my_account', methods=['post', 'get'])
 @login_required
-def my_account(): 
-    return render_template('my_account.html')
+def my_account():
+    form = Edit_profile_form()
+    form.setemail(email=current_user.email)
+    if request.method == 'POST' and form.validate_on_submit():
+        user = Users.query.filter_by(email=current_user.email).first()
+        user.fname = request.form.get("fname").title()
+        user.mname = request.form.get('mname').title()
+        user.lname = request.form.get('lname').title()
+        if current_user.email != request.form.get('email').lower():
+            user.email = request.form.get('email').lower()
+            user.email_conformation = 0
+            flash("""You just Changed your email address.
+            Prease conform your email address to use the reset passsword function!""", 'success')
+        user.phone = request.form.get('phone')
+        user.dob = request.form.get('dob')
+        user.sex_id = request.form.get('sex')
+        db.session.commit()
+        flash("Change Saved Successfully.", 'success')
+    return render_template('my_account.html', form=form)
 
 
 @bp.route('/logout')

@@ -15,8 +15,10 @@ loginmanager.login_message_category = 'info'
 
 with app.app_context():
     from flaskr.authentication import auth
+    from flaskr.errors.handlers import errors
 
     app.register_blueprint(auth.bp)
+    app.register_blueprint(errors)
 
     from flaskr.route import *
 

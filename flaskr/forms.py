@@ -4,7 +4,7 @@ from wtforms import StringField, PasswordField, SelectField, SubmitField, Boolea
     IntegerField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from flaskr.models import Users
+from flaskr.models import Users, Sex
 
 
 class Expence_form(FlaskForm):
@@ -19,7 +19,7 @@ class Expence_form(FlaskForm):
     payment_method = SelectField("Payment Method", choices=[], validate_choice=False)
     transaction_type = SelectField("Transaction Type", choices=[("1", "Debit"), ("2", "Credit")])
     amount = FloatField("Amount")
-    comment = TextAreaField('Comment', render_kw={"rows": 5, "cols": 11}, validators=[Length(max=95)])
+    comment = TextAreaField('Comment', render_kw={"rows": 5, "cols": 11, "placeholder": "Under 90 character"}, validators=[Length(max=95)])
 
     submit = SubmitField("Save")
 
@@ -52,20 +52,48 @@ class Creat_new_password(FlaskForm):
     submit = SubmitField('Sign Up')
 
 
-class RegistrationForm(FlaskForm):
+class Edit_profile_form(FlaskForm):
     fname = StringField('First Name',
                         validators=[
                             DataRequired(),
                             Length(min=2, max=20)
-                        ],
-                        default="def")
+                        ])
     mname = StringField('Middle Name')
     lname = StringField('Last Name',
                         validators=[
                             DataRequired(),
                             Length(min=2, max=20)
                         ])
-    sex = SelectField("Gender", choices=[])
+    sex = SelectField("Gender", choices=[(str(sex.id), sex.type) for sex in Sex.query.all()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    dob = DateField("Date of Birth", validators=[DataRequired()])
+    phone = StringField("Phone Number (Along with country code).", validators=[Length(max=14)])
+    submit = SubmitField('Sign Up')
+    current_email = None
+
+    def setemail(self, email=None):
+        self.current_email = email
+
+    def validate_email(self, email):
+        if self.current_email != email.data:
+            user = Users.query.filter_by(email=email.data).first()
+            if user:
+                raise ValidationError('Email address already registered with username as ' + user.fname)
+
+
+class RegistrationForm(FlaskForm):
+    fname = StringField('First Name',
+                        validators=[
+                            DataRequired(),
+                            Length(min=2, max=20)
+                        ])
+    mname = StringField('Middle Name')
+    lname = StringField('Last Name',
+                        validators=[
+                            DataRequired(),
+                            Length(min=2, max=20)
+                        ])
+    sex = SelectField("Gender", choices=[(str(sex.id), sex.type) for sex in Sex.query.all()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     dob = DateField("Date of Birth", validators=[DataRequired()])
     phone = StringField("Phone Number (Along with country code).", validators=[Length(max=14)])

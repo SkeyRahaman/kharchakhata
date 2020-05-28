@@ -47,9 +47,81 @@
 					<img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="..." class="img-thumbnail">
 				</div>
 				<div class="col-sm-12 col-md-9 col-lg-9">
-					<form name="profile_form" method="post" action="/edit_profile" >
+					<form name="profile_form" method="post" action="" >
+						{{ form.csrf_token }}
+
+							{{ form.hidden_tag() }}
+							<div class="form-group">
+								{{ form.fname.label(class="form-control-label")}}
+								{% if form.fname.errors %}
+									{{ form.fname(class="form-control form-control-lg is-invalid")}}
+									<div>
+										{% for error in form.fname.errors %}
+											<span class="text-danger">{{ error }}</span>
+										{% endfor %}
+									</div>
+								{% else %}
+									{{ form.fname(class="form-control form-control-lg", value=current_user.fname) }}
+								{% endif %}
+							</div>
+
+							<div class="form-group">
+								{{ form.mname.label(class="form-control-label")}}
+								{% if form.mname.errors %}
+									{{ form.mname(class="form-control form-control-lg is-invalid")}}
+									<div>
+										{% for error in form.mname.errors %}
+											<span class="text-danger">{{ error }}</span>
+										{% endfor %}
+									</div>
+								{% else %}
+									{{ form.mname(class="form-control form-control-lg", value=current_user.mname) }}
+								{% endif %}
+							</div>
+
+							<div class="form-group">
+								{{ form.lname.label(class="form-control-label")}}
+								{% if form.lname.errors %}
+									{{ form.lname(class="form-control form-control-lg is-invalid")}}
+									<div>
+										{% for error in form.lname.errors %}
+											<span class="text-danger">{{ error }}</span>
+										{% endfor %}
+									</div>
+								{% else %}
+									{{ form.lname(class="form-control form-control-lg", value=current_user.lname) }}
+								{% endif %}
+							</div>
+
+							<div class="form-group">
+								{{ form.email.label(class="form-control-label")}}
+								{% if form.email.errors %}
+									{{ form.email(class="form-control form-control-lg is-invalid")}}
+									<div>
+										{% for error in form.email.errors %}
+											<span class="text-danger">{{ error }}</span>
+										{% endfor %}
+									</div>
+								{% else %}
+									{{ form.email(class="form-control form-control-lg", value=current_user.email) }}
+								{% endif %}
+							</div>
+
+							<div class="form-group">
+								{{ form.phone.label(class="form-control-label")}}
+								{% if form.phone.errors %}
+									{{ form.phone(class="form-control form-control-lg is-invalid")}}
+									<div>
+										{% for error in form.phone.errors %}
+											<span class="text-danger">{{ error }}</span>
+										{% endfor %}
+									</div>
+								{% else %}
+									{{ form.phone(class="form-control form-control-lg", value=current_user.phone) }}
+								{% endif %}
+							</div>
 							
-							<label for="first_name">First name...</label>
+							<!-- <label for="first_name">First name...</label>
 							<input id="first_name" class="form-control"  name="fname" value="{{current_user.fname}}">
 
 							<label for="middle_name" required/>Middle name...</label>
@@ -62,7 +134,7 @@
 							<input id="email_address" class="form-control"  name="remail" value="{{current_user.email}}">
 
 							<label for="phone_number">Phone number...</label>
-							<input id="phone_number" class="form-control"  name="rphone" value="{{current_user.phone}}">
+							<input id="phone_number" class="form-control"  name="rphone" value="{{current_user.phone}}"> -->
 						
 							<br>
 
@@ -86,8 +158,18 @@
 											<div class="row">
 
 													<div id="dob_date">
-											 			<div class="col-5">
-											 				<input  class="form-conrol" type="date" name="dob" value="{{current_user.dob}}">
+											 			<div class="col-12">
+											 				<!-- <input  class="form-conrol" type="date" name="dob" value="{{current_user.dob}}"> -->
+															{% if form.dob.errors %}
+																{{ form.dob(class="form-control is-invalid")}}
+																<div>
+																	{% for error in form.dob.errors %}
+																		<span class="text-danger">{{ error }}</span>
+																	{% endfor %}
+																</div>
+															{% else %}
+																{{ form.dob(class="form-control", value=current_user.dob) }}
+															{% endif %}
 											 			</div>
 											 			<div class="col-7">
 											 				<label class="btn btn-sm btn-outline-danger" id="dob_cancel">Cancel</label>
@@ -96,16 +178,7 @@
 											 		<br>
 											</div>
 										</div>
-
-
 								 	</div>
-
-
-
-
-
-
-
 								 	<div class="form-group col-sm-8 col-lg-4 col-md-4 right_side_gap">
 								 		<div class="container-fluid row">
 								 			<div class="col-6">
@@ -123,12 +196,7 @@
 											<div class="container-fluid"> 
 													<div class="row">	
 														<div class="col-4">
-													 		<select id="sex" name="sex" class="form-conrol" name="sex">
-													 			<option value="{{current_user.sex}}">Select</option>
-																<option value="2">Female</option>
-																<option value="1">Male</option>
-																<option value="3">Others</option>
-															</select>
+															{{ form.sex(class="form-control", value=current_user.sex) }}
 														</div>
 														<div class="col-4">
 
