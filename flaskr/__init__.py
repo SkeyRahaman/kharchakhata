@@ -24,4 +24,4 @@ with app.app_context():
 
     from flaskr.dashboard_dash.dashboard import create_dashboard
 
-    app = create_dashboard(app)
+    #app = create_dashboard(app)

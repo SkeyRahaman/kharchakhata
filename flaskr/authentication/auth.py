@@ -2,14 +2,14 @@ from flask import Blueprint, redirect, render_template, request
 from flaskr import app, db, bcrypt
 from flaskr.functions import *
 from flaskr.models import Users, Sex
-from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form,\
+from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form, \
     Creat_new_password, Reset_password, Edit_profile_form
 from flask_login import login_user, logout_user, login_required, current_user
 from itsdangerous import URLSafeTimedSerializer
 
 bp = Blueprint('auth', __name__,
                template_folder='templates',
-               static_folder='static')  # url_prefix="/auth"
+               static_folder='static')
 s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 
 
@@ -58,8 +58,7 @@ def forgot_password():
         email = request.form.get('email').lower()
         token = s.dumps(email, salt="this_is_the_email")
         reset_url = "http://" + str(request.host) + "/reset_password/" + str(token)
-        print(reset_url)
-        # send_mail(to=email, name=Users.query.filter_by(email=email).first().fname, reset_url=reset_url)
+        send_mail(to=email, name=Users.query.filter_by(email=email).first().fname, reset_url=reset_url)
         flash("URL to reset your password is send to " + email + ", Visit your Email to Reset Your Password!",
               "success")
         return redirect('/')
@@ -106,7 +105,9 @@ def my_account():
         user.sex_id = request.form.get('sex')
         db.session.commit()
         flash("Change Saved Successfully.", 'success')
-    return render_template('my_account.html', form=form)
+    return render_template('my_account.html',
+                           title="My Account",
+                           form=form)
 
 
 @bp.route('/logout')

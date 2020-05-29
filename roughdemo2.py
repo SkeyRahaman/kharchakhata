@@ -2,9 +2,20 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@127.0.0.1/testing'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:9038383080@database-2.csifl31dpmlc.us-east-2.rds.amazonaws.com/kharchakhata'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+db.create_all()
+
+
+class Sex(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    type = db.Column(db.String(10), unique=True, nullable=False)
+    user = db.relationship('Users', backref='sex', lazy=True)
+    admin = db.relationship('Admin', backref='sex', lazy=True)
+
+    def __repr__(self):
+        return '<Sex %r>' % self.type
 
 
 class Expences(db.Model):
@@ -17,9 +28,23 @@ class Expences(db.Model):
     debit = db.Column(db.Float)
     credit = db.Column(db.Float)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    comments = db.Column(db.String(100))
 
     def __repr__(self):
         return self.name
+
+    def __init__(self, name, date_time,
+                 type_subtype, frequency, payment,
+                 debit, credit, user, comment):
+        self.name = name
+        self.date_time = date_time
+        self.type_subtype_id = type_subtype
+        self.frequency_id = frequency
+        self.payment_id = payment
+        self.debit = debit
+        self.credit = credit
+        self.user_id = user
+        self.comments = comment
 
 
 class Users(db.Model):
@@ -43,8 +68,7 @@ class Users(db.Model):
                  fname, email, password,
                  mname=None, lname=None,
                  dob=None, phone=None,
-                 id=None, sex=4):
-        self.id = id
+                 sex=1):
         self.fname = fname
         self.mname = mname
         self.lname = lname
@@ -53,16 +77,6 @@ class Users(db.Model):
         self.phone = phone
         self.password = password
         self.sex_id = sex
-
-
-class Sex(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    type = db.Column(db.String(10), unique=True, nullable=False)
-    user = db.relationship('Users', backref='sex', lazy=True)
-    admin = db.relationship('Admin', backref='sex', lazy=True)
-
-    def __repr__(self):
-        return '<Sex %r>' % self.type
 
 
 class Frequency(db.Model):
@@ -145,24 +159,26 @@ class Admin(db.Model):
 
 @app.route('/')
 def index():
-    res = Type_subtype.query.filter_by(type_id=1)
-    for r in res:
-        print(r.subtype)
-    return ""
 
-
-@app.route('/get_subtype_of_type/<type_id>')
-def get_sub_type(type_id):
-    subtypes = Type_subtype.query.filter_by(type_id=type_id)
-    print(subtypes)
-    subtype_obj = []
-    for i in subtypes:
-        obj = {
-            'id': int(i.subtype_id),
-            'subtype': str(i.subtype)
-        }
-        subtype_obj.append(obj)
-    return jsonify(subtype_obj)
+    return "hiiiii!"
+#     res = Type_subtype.query.filter_by(type_id=1)
+#     for r in res:
+#         print(r.subtype)
+#     return ""
+#
+#
+# @app.route('/get_subtype_of_type/<type_id>')
+# def get_sub_type(type_id):
+#     subtypes = Type_subtype.query.filter_by(type_id=type_id)
+#     print(subtypes)
+#     subtype_obj = []
+#     for i in subtypes:
+#         obj = {
+#             'id': int(i.subtype_id),
+#             'subtype': str(i.subtype)
+#         }
+#         subtype_obj.append(obj)
+#     return jsonify(subtype_obj)
 
 
 if __name__ == "__main__":

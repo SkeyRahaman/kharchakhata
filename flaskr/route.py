@@ -40,7 +40,7 @@ def add_expence():
         comment = request.form.get("comment")
         if transaction_type == "1":
             debit = amount
-            credit = 0
+            credit = None
         else:
             debit = 0
             credit = amount
@@ -54,7 +54,48 @@ def add_expence():
         flash("New Transaction Added!", "success")
         return redirect("/")
 
-    return render_template("add_expence.html", form=form)
+    return render_template("add_expence.html", form=form, title="Add Transaction")
+
+
+@app.route('/add_table/<month>/<year>/<id>')
+@login_required
+def add_table(month, year, id):
+    last_expence_time = Expences.query.filter_by(id=id).first().date_time
+    if month == 'all':
+        table_data_touple = db.session.query(Expences) \
+            .order_by(Expences.date_time.desc()) \
+            .filter(Expences.user_id == current_user.id)\
+            .filter(Expences.date_time <= last_expence_time)\
+            .filter(Expences.id != id) \
+            .limit(10)
+    else:
+        table_data_touple = db.session.query(Expences) \
+            .order_by(Expences.date_time.desc()) \
+            .filter(Expences.user_id == current_user.id) \
+            .filter(func.month(Expences.date_time) == datetime.strptime(month, '%B').month) \
+            .filter(func.year(Expences.date_time) == int(year)) \
+            .filter(Expences.date_time <= last_expence_time) \
+            .filter(Expences.id != id) \
+            .limit(2)
+    table_data = []
+    for row in table_data_touple:
+        table_data.append({
+            'id': str(row.id),
+            'name': str(row.name),
+            'date': str(row.date_time.strftime('%d %B, %Y')),
+            'time': str(row.date_time.strftime('%I:%M %p')),
+            'type': str(row.type_subtype.type),
+            'subtype': str(row.type_subtype.subtype),
+            'frequency': str(row.frequency),
+            'debit': row.debit,
+            'credit': row.credit,
+            'payment_method': str(row.payment_medium),
+            'comment': str(row.comments)
+        })
+    if table_data:
+        return jsonify(table_data)
+    else:
+        return jsonify(False)
 
 
 @app.route('/dashboard/<string:month>/<string:year>')
@@ -64,14 +105,26 @@ def dashboard(month, year):
         credit_debit_saving = db.session.query(func.sum(Expences.credit).label("credit"),
                                                func.sum(Expences.debit).label("debit"),
                                                (func.sum(Expences.credit) - func.sum(Expences.debit)).label("savings")) \
-            .filter(Expences.user_id == current_user.id).first()
+            .filter(Expences.user_id == current_user.id) \
+            .first()
+        table_data_touple = db.session.query(Expences) \
+            .order_by(Expences.date_time.desc()) \
+            .filter(Expences.user_id == current_user.id) \
+            .limit(20)
     else:
         credit_debit_saving = db.session.query(func.sum(Expences.credit).label("credit"),
                                                func.sum(Expences.debit).label("debit"),
                                                (func.sum(Expences.credit) - func.sum(Expences.debit)).label("savings")) \
-            .filter(Expences.user_id == current_user.id).filter(
-            (func.month(Expences.date_time) == datetime.strptime(month, '%B').month)).filter(
-            func.year(Expences.date_time) == int(year)).first()
+            .filter(Expences.user_id == current_user.id) \
+            .filter((func.month(Expences.date_time) == datetime.strptime(month, '%B').month)) \
+            .filter(func.year(Expences.date_time) == int(year)) \
+            .first()
+        table_data_touple = db.session.query(Expences) \
+            .order_by(Expences.date_time.desc()) \
+            .filter(Expences.user_id == current_user.id) \
+            .filter(func.month(Expences.date_time) == datetime.strptime(month, '%B').month) \
+            .filter(func.year(Expences.date_time) == int(year)) \
+            .limit(2)
     last_month_profit = db.session.query((func.sum(Expences.credit) - func.sum(Expences.debit)).label("savings")) \
         .filter(Expences.user_id == current_user.id).filter(
         func.month(Expences.date_time) == (datetime.now().month - 1)) \
@@ -82,48 +135,37 @@ def dashboard(month, year):
         "saving": credit_debit_saving.savings,
         "last_month_saving": last_month_profit.savings
     }
+    table_data = []
+    for row in table_data_touple:
+        table_data.append({
+            'id': row.id,
+            'name': row.name,
+            'date': row.date_time.strftime('%d %B, %Y'),
+            'time': row.date_time.strftime('%I:%M %p'),
+            'type': row.type_subtype.type,
+            'subtype': row.type_subtype.subtype,
+            'frequency': row.frequency,
+            'debit': row.debit,
+            'credit': row.credit,
+            'payment_method': row.payment_medium,
+            'comment': row.comments
+        })
     month_name = db.session.query(func.month(Expences.date_time),
                                   func.year(Expences.date_time)).distinct()
     _ = sorted([[i[0], i[1], calendar.month_name[i[0]]] for i in month_name], key=lambda x: (x[1], x[0]), reverse=True)
     month_name = [[i[2], i[1]] for i in _]
-    if month == 'all':
-        month_filter = ""
-    else:
-        month_filter = """AND MONTH(date) = {}  AND YEAR(date) = {} """.format(datetime.strptime(month, '%B').month,
-                                                                               year)
-    query = """SELECT `expences`.`expence_name`,`expences`.`date`,`expences`.`time`,`credit_debit`.`type`,`type`.`type`,`sub_type`.`subtype`,`frequency`.`type`,`expences`.`amount`,`payment_medium`.`type`, `expences`.`expence_id` FROM 
-        `expences` 
-
-        JOIN `credit_debit` ON 
-        `expences`.`credit_debit_id` = `credit_debit`.`credit_debit_id`
-
-        JOIN `type` ON 
-        `expences`.`type_id` = `type`.`type_id`
-
-        JOIN `sub_type` ON
-        `expences`.`sub_type_id` = `sub_type`.`sub_type_id`
-
-        JOIN `frequency` ON
-        `expences`.`frequency_id` = `frequency`.`frequency_id`
-
-        JOIN `payment_medium` ON
-        `expences`.`payment_medium_id` = `payment_medium`.`medium_id`
-
-        WHERE `expences`.`user_id` = {} {}
-
-        ORDER BY `expences`.`date` DESC , `expences`.`time` DESC LIMIT 10 """.format(current_user.id,
-                                                                                     month_filter)
-    table_data = run_in_database(query, fetch='yes')
 
     return render_template('dashboard.html',
+                           title="Dashboard",
+                           months=month_name,
                            card=card,
-                           table=table_data,
-                           months=month_name)
+                           table=table_data)
 
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('about.html',
+                           title="About")
 
 
 @app.route('/settings', methods=["get", "post"])
@@ -138,7 +180,9 @@ def settings():
             flash("Password Updated Successful!.", "success")
         else:
             flash("Current Password Does Not Match!", "danger")
-    return render_template("settings.html", form_password=form_password)
+    return render_template("settings.html",
+                           form_password=form_password,
+                           title="Settings")
 
 
 @app.route('/get_subtype_of_type/<type_id>')
@@ -153,51 +197,3 @@ def get_sub_type(type_id):
         }
         subtype_obj.append(obj)
     return jsonify(subtype_obj)
-
-
-@app.route('/add_table/<month>/<year>/<date>/<time>')
-@login_required
-def add_table(month, year, date, time):
-    date = date.replace("_", "-")
-    time = time.replace("_", ":")
-    if month == 'all' and year == 'all':
-        month_filter = ""
-    else:
-        month_filter = """AND MONTH(date) = {}  AND YEAR(date) = {} """.format(datetime.strptime(month, '%B').month,
-                                                                               year)
-    query = """SELECT `expences`.`expence_name`,`expences`.`date`,`expences`.`time`,`credit_debit`.`type`,`type`.`type`,`sub_type`.`subtype`,`frequency`.`type`,`expences`.`amount`,`payment_medium`.`type`, `expences`.`expence_id` FROM 
-    `expences` 
-
-    JOIN `credit_debit` ON 
-    `expences`.`credit_debit_id` = `credit_debit`.`credit_debit_id`
-
-    JOIN `type` ON 
-    `expences`.`type_id` = `type`.`type_id`
-
-    JOIN `sub_type` ON
-    `expences`.`sub_type_id` = `sub_type`.`sub_type_id`
-
-    JOIN `frequency` ON
-    `expences`.`frequency_id` = `frequency`.`frequency_id`
-
-    JOIN `payment_medium` ON
-    `expences`.`payment_medium_id` = `payment_medium`.`medium_id`
-
-    WHERE `expences`.`user_id` = {}  {} AND ((`expences`.`date` = '{}' AND `expences`.`time` < '{}') OR  (`expences`.`date` < '{}'))
-
-    ORDER BY `expences`.`date` DESC , `expences`.`time` DESC LIMIT 5 """.format(current_user.id, month_filter, date,
-                                                                                time, date)
-    table_data = run_in_database(quary=query, fetch='yes')
-    table_dict = []
-    if table_data:
-        if len(table_data) != 0:
-            for i in table_data:
-                row = []
-                for j in i:
-                    row.append(str(j))
-                table_dict.append(row)
-            return jsonify(table_dict)
-        else:
-            return jsonify(False)
-    else:
-        return jsonify(False)

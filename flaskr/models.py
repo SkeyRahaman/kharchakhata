@@ -7,6 +7,16 @@ def load_user(id):
     return Users.query.get(int(id))
 
 
+class Sex(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    type = db.Column(db.String(10), unique=True, nullable=False)
+    user = db.relationship('Users', backref='sex', lazy=True)
+    admin = db.relationship('Admin', backref='sex', lazy=True)
+
+    def __repr__(self):
+        return '<Sex %r>' % self.type
+
+
 class Expences(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(15), nullable=False)
@@ -34,7 +44,6 @@ class Expences(db.Model):
         self.credit = credit
         self.user_id = user
         self.comments = comment
-
 
 
 class Users(db.Model, UserMixin):
@@ -67,16 +76,6 @@ class Users(db.Model, UserMixin):
         self.phone = phone
         self.password = password
         self.sex_id = sex
-
-
-class Sex(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    type = db.Column(db.String(10), unique=True, nullable=False)
-    user = db.relationship('Users', backref='sex', lazy=True)
-    admin = db.relationship('Admin', backref='sex', lazy=True)
-
-    def __repr__(self):
-        return '<Sex %r>' % self.type
 
 
 class Frequency(db.Model):
