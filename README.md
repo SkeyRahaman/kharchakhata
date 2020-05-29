@@ -1,2 +1,2 @@
 ## <B>KHARCHAKHATA.COM</B>
-<p>This is a python web project to track your income and expenditure!</p>
+<p>This is a python based web application that uses your daily expenditure data and transforms them into beautiful visualizations and helps you to track your expenses as well as organize your savings.</p>
