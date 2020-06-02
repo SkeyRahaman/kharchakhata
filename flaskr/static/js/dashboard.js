@@ -32,10 +32,22 @@ const load_more_table = () => {
 					cell.innerHTML = ("<strong>"+data[i]['subtype']+"</strong>");
 					cell = row.insertCell();
 					cell.innerHTML = ("<strong>"+data[i]['frequency']+"</strong>");
-					cell = row.insertCell();
-					cell.innerHTML = ("<strong>"+data[i]['debit']+"</strong>");
-					cell = row.insertCell();
-					cell.innerHTML = ("<strong>"+data[i]['credit']+"</strong>");
+
+					if (data[i]['debit'] === 0) {
+						cell = row.insertCell();
+						cell.innerHTML = ("<strong>"+"</strong>");
+					} else {
+						cell = row.insertCell();
+						cell.innerHTML = ("<strong>"+data[i]['debit']+"</strong>");
+					}
+					if (data[i]['credit'] === 0) {
+						cell = row.insertCell();
+						cell.innerHTML = ("<strong>"+"</strong>");
+					} else {
+						cell = row.insertCell();
+						cell.innerHTML = ("<strong>"+data[i]['credit']+"</strong>");
+					}
+					
 					cell = row.insertCell();
 					cell.innerHTML = ("<strong>"+data[i]['payment_method']+"</strong>");
 					cell = row.insertCell();

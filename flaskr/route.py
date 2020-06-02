@@ -87,8 +87,8 @@ def add_table(month, year, id):
             'type': str(row.type_subtype.type),
             'subtype': str(row.type_subtype.subtype),
             'frequency': str(row.frequency),
-            'debit': row.debit,
-            'credit': row.credit,
+            'debit': int(row.debit),
+            'credit': int(row.credit),
             'payment_method': str(row.payment_medium),
             'comment': str(row.comments)
         })
