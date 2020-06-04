@@ -5,6 +5,7 @@ from wtforms import StringField, PasswordField, SelectField, SubmitField, Boolea
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flaskr.models import Users, Sex
+from flask import flash
 
 
 class Expence_form(FlaskForm):
@@ -32,6 +33,9 @@ class Forgot_password_form(FlaskForm):
         user = Users.query.filter_by(email=email.data).first()
         if not user:
             raise ValidationError("Email Address not registered!. You can Register as new User!.")
+        if user.email_conformation == 0:
+            flash("You can conform your email address from The conformation mail that we send you.", "info")
+            raise ValidationError("Email Address not conformed!!.")
 
 
 class Reset_password(FlaskForm):
