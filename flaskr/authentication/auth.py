@@ -5,12 +5,13 @@ from flaskr.models import Users, Sex
 from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form, \
     Creat_new_password, Reset_password, Edit_profile_form
 from flask_login import login_user, logout_user, login_required, current_user
-from itsdangerous import URLSafeTimedSerializer
+from itsdangerous import URLSafeTimedSerializer, URLSafeSerializer
 
 bp = Blueprint('auth', __name__,
                template_folder='templates',
                static_folder='static')
 s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
+email_link = URLSafeSerializer(app.config['SECRET_KEY'])
 
 
 @bp.route("/login", methods=["get", 'post'])
@@ -44,10 +45,15 @@ def registration_form():
         new_user = Users(email=email, fname=fname,
                          mname=mname, lname=lname,
                          dob=dob, password=password,
-                         phone=phone,sex=sex)
+                         phone=phone, sex=sex)
         db.session.add(new_user)
         db.session.commit()
+
         flash("Registration Successful!. Please Login with Your Email and Password!.", "success")
+        token = email_link.dumps(email, salt="this_is_the_email")
+        conform_url = "http://" + str(request.host) + "/conform_password/" + str(token)
+        send_welcome_email(email=email, fname=fname, conform_url=conform_url)
+        flash("A conformation Email is been send to your email address. Please verify your email address to use reset password functions.")
         return redirect("/")
     return render_template("register.html", title="Register", form=form)
 
@@ -65,6 +71,17 @@ def forgot_password():
         return redirect('/')
     else:
         return render_template("forgot_password_one.html", form=form)
+
+
+@bp.route('/conform_password/<token>')
+def conform_password(token):
+    email = email_link.loads(token, salt="this_is_the_email")
+    b = Users.query.filter(Users.email == email).first()
+    b.email_conformation = 1
+    db.session.commit()
+    flash("Email address conformed.!", "success")
+    flash("Please login with your email and password if not loged in.", "info")
+    return redirect("/")
 
 
 @bp.route('/reset_password/<token>', methods=["GET", "POST"])
