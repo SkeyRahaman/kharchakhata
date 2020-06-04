@@ -53,7 +53,7 @@ def registration_form():
         token = email_link.dumps(email, salt="this_is_the_email")
         conform_url = "http://" + str(request.host) + "/conform_password/" + str(token)
         send_welcome_email(email=email, fname=fname, conform_url=conform_url)
-        flash("A conformation Email is been send to your email address. Please verify your email address to use reset password functions.")
+        flash("A conformation Email is been send to your email address. Please verify your email address to use reset password functions.","info")
         return redirect("/")
     return render_template("register.html", title="Register", form=form)
 
