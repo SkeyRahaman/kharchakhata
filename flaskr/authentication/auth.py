@@ -24,7 +24,7 @@ def login():
             session['user_name'] = user.fname
         else:
             flash("Email address and password does not match!.", "info")
-        return redirect("/dashapp/")
+        return redirect("/")
     else:
         return render_template("login.html", title="Login", form=form)
 
