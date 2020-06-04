@@ -22,10 +22,6 @@ def home():
 @login_required
 def add_expence():
     form = Expence_form()
-    form.type.choices = [(type.id, type.name) for type in Type.query.all()]
-    form.frequency.choices = [(fre.id, fre.name) for fre in Frequency.query.all()]
-    form.payment_method.choices = [(payment_method.id, payment_method.name) for payment_method in
-                                   Payment_medium.query.all()]
     if form.validate_on_submit():
         expence_name = request.form.get("name").title()
         date = request.form.get("date")
@@ -40,7 +36,7 @@ def add_expence():
         comment = request.form.get("comment")
         if transaction_type == "1":
             debit = amount
-            credit = None
+            credit = 0
         else:
             debit = 0
             credit = amount
@@ -53,6 +49,11 @@ def add_expence():
         db.session.commit()
         flash("New Transaction Added!", "success")
         return redirect("/")
+    else:
+        form.type.choices = [(type.id, type.name) for type in Type.query.all()]
+        form.frequency.choices = [(fre.id, fre.name) for fre in Frequency.query.all()]
+        form.payment_method.choices = [(payment_method.id, payment_method.name) for payment_method in
+                                       Payment_medium.query.all()]
 
     return render_template("add_expence.html", form=form, title="Add Transaction")
 
@@ -124,7 +125,7 @@ def dashboard(month, year):
             .filter(Expences.user_id == current_user.id) \
             .filter(func.month(Expences.date_time) == datetime.strptime(month, '%B').month) \
             .filter(func.year(Expences.date_time) == int(year)) \
-            .limit(2)
+            .limit(20)
     last_month_profit = db.session.query((func.sum(Expences.credit) - func.sum(Expences.debit)).label("savings")) \
         .filter(Expences.user_id == current_user.id).filter(
         func.month(Expences.date_time) == (datetime.now().month - 1)) \

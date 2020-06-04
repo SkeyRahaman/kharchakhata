@@ -86,6 +86,9 @@ class Frequency(db.Model):
     def __repr__(self):
         return self.name
 
+    def __init__(self, name):
+        self.name = name
+
 
 class Payment_medium(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -94,6 +97,9 @@ class Payment_medium(db.Model):
 
     def __repr__(self):
         return self.name
+
+    def __init__(self, name):
+        self.name = name
 
 
 class Type_subtype(db.Model):
@@ -105,6 +111,10 @@ class Type_subtype(db.Model):
     def __repr__(self):
         return self.id
 
+    def __init__(self, type_id, subtype_id):
+        self.type_id = type_id
+        self.subtype_id = subtype_id
+
 
 class Type(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -114,6 +124,9 @@ class Type(db.Model):
     def __repr__(self):
         return self.name
 
+    def __init__(self, name):
+        self.name = name
+
 
 class Sub_type(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -122,6 +135,9 @@ class Sub_type(db.Model):
 
     def __repr__(self):
         return self.name
+
+    def __init__(self, name):
+        self.name = name
 
 
 class Admin(db.Model, UserMixin):

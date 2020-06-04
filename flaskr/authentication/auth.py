@@ -24,7 +24,7 @@ def login():
             session['user_name'] = user.fname
         else:
             flash("Email address and password does not match!.", "info")
-        return redirect("/")
+        return redirect("/dashapp/")
     else:
         return render_template("login.html", title="Login", form=form)
 
@@ -40,10 +40,11 @@ def registration_form():
         dob = request.form.get('dob')
         phone = request.form.get('phone')
         password = bcrypt.generate_password_hash(request.form.get('password')).decode('utf-8')
+        sex = request.form.get("sex")
         new_user = Users(email=email, fname=fname,
                          mname=mname, lname=lname,
                          dob=dob, password=password,
-                         phone=phone)
+                         phone=phone,sex=sex)
         db.session.add(new_user)
         db.session.commit()
         flash("Registration Successful!. Please Login with Your Email and Password!.", "success")

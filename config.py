@@ -23,8 +23,8 @@ class Config:
     EXPLAIN_TEMPLATE_LOADING = True
     SECRET_KEY = os.urandom(24)
 
-    # SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://admin:9038383080@database-2.csifl31dpmlc.us-east-2.rds.amazonaws.com/kharchakhata'
-    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:@127.0.0.1/testing'
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://admin:9038383080@database-2.csifl31dpmlc.us-east-2.rds.amazonaws.com/kharchakhata'
+    # SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:@127.0.0.1/testing'
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True

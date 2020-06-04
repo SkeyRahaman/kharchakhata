@@ -2,17 +2,10 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-from flaskr.functions import *
+from flaskr.functions.dash_figures import *
 from flaskr.models import Expences
 from flaskr import app, db
 from sqlalchemy import func
-from flask_login import current_user
-from flask import session
-
-month_name = db.session.query(func.month(Expences.date_time),
-                              func.year(Expences.date_time)).distinct()
-_ = sorted([[i[0], i[1], calendar.month_name[i[0]]] for i in month_name], key=lambda x: (x[1], x[0]), reverse=True)
-month_name = [{'label': i[2] + " " + str(i[1]), 'value': i[2] + "_" + str(i[1])} for i in _]
 
 
 def create_dashboard(server=app):
@@ -48,8 +41,8 @@ def create_dashboard(server=app):
         external_scripts=external_scripts,
     )
 
-    dash_app.title = 'KharchaKhata - Dashboard'
-    dash_app.layout = html.Div([
+    dash_app.title = 'KharchaKhata - Charts'
+    dash_app.layout = html.Div(className="mb-0", children=[
 
         # hedder
 
@@ -58,7 +51,7 @@ def create_dashboard(server=app):
                 html.A(href="/dashboard/all/all", children='KHARCHAKHATA')
             ]),
             html.Strong(id='my_account', children=[
-                html.A(href="/my_account", children='Hi! ')
+                html.A(href="/my_account", children='Loading...')
             ])
         ]),
 
@@ -116,8 +109,8 @@ def create_dashboard(server=app):
                                              'zIndex': '999',
                                              'width': '150px'
                                          },
-                                         options=month_name,
-                                         value=month_name[0]['value']),
+                                         options=get_months(),
+                                         value=get_months_first_value()),
                         ]),
                     ]),
                     html.Li(className="nav-item", children=[
@@ -130,7 +123,7 @@ def create_dashboard(server=app):
                                              'zIndex': '998',
                                              'width': '150px'
                                          },
-                                         value="expenditure",
+                                         value="expence",
                                          options=[
                                              {'label': 'Expenditure', 'value': 'expence'},
                                              {'label': 'Income', 'value': 'income'}
@@ -146,23 +139,23 @@ def create_dashboard(server=app):
         html.Div(className="row container-fluid", children=[
             html.Div(className="col-md-6 col-sm-12 p-2 mx-auto", children=[
                 html.Div(className="bg-light card row", children=[
-                    html.Div(className="col-11 btn-group btn-group-toggle mx-auto mt-2", id="fig1_togel", children=[
+                    html.Div(className="col-12 btn-group btn-group-toggle mx-auto mt-2", id="fig1_togel", children=[
                         html.Label(className="btn btn-outline-dark active", children=[
                             "Bar Graph",
                             dcc.Input(type="radio", id='graph1_btn1')
                         ]),
                         html.Label(className="btn btn-outline-dark", children=[
-                            "Histogram",
+                            "Heatmap",
                             dcc.Input(type="radio", id='graph1_btn2')
                         ]),
                     ]),
-                    html.Div(id="graph1_1", className='col-11 mx-auto mb-2', children=[
+                    html.Div(id="graph1_1", className='col-12 mx-auto my-2', children=[
                         dcc.Graph(
                             id="bar_graph",
                             figure=first_bar_graph()
                         )
                     ]),
-                    html.Div(id="graph1_2", className='col-11  mx-auto mb-2', children=[
+                    html.Div(id="graph1_2", className='col-12  mx-auto my-2', children=[
                         dcc.Graph(
                             id="Heatmap",
                             figure=first_heatmap_graph(),
@@ -170,33 +163,116 @@ def create_dashboard(server=app):
                     ]),
                 ])
             ]),
-            html.Div(className="col-md-6 col-sm-12 p-2 mx-auto", children=[
-                html.Div(className="bg-light card px-auto", children=[
-                    html.Div(className="row", children=[
-                        html.Div(className="col-6 m-auto", children=[
-                            dcc.Graph(
-                                id="first_pie_chat",
-                                figure=first_pie_chat("may", 2020, "Expenditure"),
-                            ),
-                        ]),
-                        html.Div(className="col-6", children=[
-                            dcc.Graph(
-                                id="first_pie_chat_subtype",
-                                figure=first_pie_chat_subtype(month="May",
-                                                              year=2020,
-                                                              expence_type=None,
-                                                              etype=None)
-                            )
-                        ])
-                    ])
+            html.Div(className="col-md-3 col-sm-6 p-2 mx-auto", children=[
+                html.Div(className="m-auto card bg-light", children=[
+                    dcc.Dropdown(id="type_graph_select",
+                                 searchable=False,
+                                 clearable=False,
+                                 style={
+                                     'position': 'relative',
+                                     'zIndex': '995',
+                                 },
+                                 options=[
+                                     {'label': "Pie Chat", 'value': "pie"},
+                                     {'label': "Donut Chat", 'value': "donut"},
+                                     {'label': "Spider Chat", 'value': "spider"}
+                                 ],
+                                 value="donut",
+                                 ),
+                    dcc.Graph(
+                        id="first_pie_chat",
+                        figure=first_pie_chat("may", 2020, "Expenditure"),
+                    ),
                 ])
             ]),
-            html.Div(className="col-md-6 col-sm-12", children=[
-                dcc.Dropdown(className="bv", options=["Earning", "Expendature"])
+            html.Div(className="col-md-3 col-sm-6 p-2 mx-auto", children=[
+                html.Div(className="m-auto card bg-light", children=[
+                    dcc.Dropdown(id="subtype_graph_select",
+                                 searchable=False,
+                                 clearable=False,
+                                 style={
+                                     'position': 'relative',
+                                     'zIndex': '999',
+                                 },
+                                 options=[
+                                     {'label': "Pie Chat", 'value': "pie"},
+                                     {'label': "Donut Chat", 'value': "donut"},
+                                     {'label': "Spider Chat", 'value': "spider"}
+                                 ],
+                                 value="pie",
+                                 ),
+                    dcc.Graph(
+                        id="first_pie_chat_subtype",
+                        figure=first_pie_chat_subtype(month="May",
+                                                      year=2020,
+                                                      expence_type=None,
+                                                      etype=None)
+                    )
+                ])
             ]),
-            html.Div(className="col-md-6 col-sm-12", children=[
-                dcc.Dropdown(className="bv", options=["Earning", "Expendature"])
+            html.Div(className="col-md-3 col-sm-6 p-2 mx-auto", children=[
+                html.Div(className="m-auto card bg-light", children=[
+                    dcc.Dropdown(id="frequency_graph_select",
+                                 searchable=False,
+                                 clearable=False,
+                                 style={
+                                     'position': 'relative',
+                                     'zIndex': '999',
+                                 },
+                                 options=[
+                                     {'label': "Pie Chat", 'value': "pie"},
+                                     {'label': "Donut Chat", 'value': "donut"},
+                                     {'label': "Spider Chat", 'value': "spider"}
+                                 ],
+                                 value="spider",
+                                 ),
+                    dcc.Graph(
+                        id="frequency_pie_chat",
+                        figure=frequency_pie_chat("may", 2020, "Expenditure"),
+                    ),
+                ])
             ]),
+            html.Div(className="col-md-3 col-sm-6 p-2 mx-auto", children=[
+                html.Div(className="m-auto card bg-light", children=[
+                    dcc.Dropdown(id="payment_type_graph_select",
+                                 searchable=False,
+                                 clearable=False,
+                                 style={
+                                     'position': 'relative',
+                                     'zIndex': '999',
+                                 },
+                                 options=[
+                                     {'label': "Pie Chat", 'value': "pie"},
+                                     {'label': "Donut Chat", 'value': "donut"},
+                                     {'label': "Spider Chat", 'value': "spider"}
+                                 ],
+                                 value="donut",
+                                 ),
+                    dcc.Graph(
+                        id="payment_type_pie_chat",
+                        figure=payment_type_pie_chat(month="May",
+                                                     year=2020,
+                                                     expence_type=None)
+                    )
+                ]),
+            ]),
+            html.Div(className="col-md-6 col-sm-12 p-2 mx-auto", children=[
+                html.Div(className="m-auto card bg-light", children=[
+                    dcc.Graph(
+                        id="expenditure_income_line_graph",
+                        figure=expenditure_income_line_graph()
+                    )
+                ]),
+            ]),
+            html.Div(className="col-md-6 col-sm-12 p-2 mx-auto", children=[
+                html.Div(className="m-auto card bg-light", children=[
+                    dcc.Graph(
+                        id="savings_month_wise_bar_graph",
+                        figure=savings_month_wise_bar_graph()
+                    )
+                ]),
+            ]),
+
         ]),
 
         # Footer
@@ -206,6 +282,18 @@ def create_dashboard(server=app):
             ]),
         ]),
     ])
+
+    @dash_app.callback(Output(component_id='month_select', component_property='options'),
+                       [Input(component_id='expence_type', component_property='value')]
+                       )
+    def update_month_dropdown(month_select):
+        return get_months()
+
+    @dash_app.callback(Output(component_id='month_select', component_property='value'),
+                       [Input(component_id='expence_type', component_property='value')]
+                       )
+    def update_month_dropdown_value(month_select):
+        return get_months_first_value()
 
     @dash_app.callback(Output(component_id='Heatmap', component_property='figure'),
                        [Input(component_id='expence_type', component_property='value'),
@@ -227,18 +315,22 @@ def create_dashboard(server=app):
 
     @dash_app.callback(Output(component_id='first_pie_chat', component_property='figure'),
                        [Input(component_id='expence_type', component_property='value'),
-                        Input(component_id='month_select', component_property='value')]
+                        Input(component_id='month_select', component_property='value'),
+                        Input(component_id='type_graph_select', component_property='value')]
                        )
-    def update_heat_map(input_value, month_select):
-        return first_pie_chat(month=month_select.split("_")[0], year=month_select.split("_")[1],
-                              expence_type=input_value)
+    def update_heat_map(input_value, month_select, graph_type):
+        return first_pie_chat(month=month_select.split("_")[0],
+                              year=month_select.split("_")[1],
+                              expence_type=input_value,
+                              graph_type=graph_type)
 
     @dash_app.callback(Output(component_id='first_pie_chat_subtype', component_property='figure'),
                        [Input(component_id='expence_type', component_property='value'),
                         Input(component_id='month_select', component_property='value'),
-                        Input(component_id='first_pie_chat', component_property='clickData')]
+                        Input(component_id='first_pie_chat', component_property='clickData'),
+                        Input(component_id='subtype_graph_select', component_property='value')]
                        )
-    def update_all(input_value, month_select, graph_data):
+    def update_subtype_pie_chat(input_value, month_select, graph_data, graph_type):
         try:
             etype = graph_data['points'][0]['label']
         except:
@@ -246,6 +338,48 @@ def create_dashboard(server=app):
         return first_pie_chat_subtype(month=month_select.split("_")[0],
                                       year=month_select.split("_")[1],
                                       expence_type=input_value,
-                                      etype=etype)
+                                      etype=etype,
+                                      graph_type=graph_type)
+
+    @dash_app.callback(Output(component_id='frequency_pie_chat', component_property='figure'),
+                       [Input(component_id='expence_type', component_property='value'),
+                        Input(component_id='month_select', component_property='value'),
+                        Input(component_id='frequency_graph_select', component_property='value')]
+                       )
+    def update_frequency_pie_chat(input_value, month_select, graph_type):
+        return frequency_pie_chat(month=month_select.split("_")[0],
+                                  year=month_select.split("_")[1],
+                                  expence_type=input_value,
+                                  graph_type=graph_type)
+
+    @dash_app.callback(Output(component_id='payment_type_pie_chat', component_property='figure'),
+                       [Input(component_id='expence_type', component_property='value'),
+                        Input(component_id='month_select', component_property='value'),
+                        Input(component_id='payment_type_graph_select', component_property='value')]
+                       )
+    def update_payment_type_pie_chat(input_value, month_select, graph_type):
+        return payment_type_pie_chat(month=month_select.split("_")[0],
+                                     year=month_select.split("_")[1],
+                                     expence_type=input_value,
+                                     graph_type=graph_type)
+
+    @dash_app.callback(Output(component_id='expenditure_income_line_graph', component_property='figure'),
+                       [Input(component_id='month_select', component_property='value')]
+                       )
+    def update_expenditure_income_line_graph(month_select):
+        return expenditure_income_line_graph(month=month_select.split("_")[0],
+                                             year=month_select.split("_")[1])
+
+    @dash_app.callback(Output(component_id='savings_month_wise_bar_graph', component_property='figure'),
+                       [Input(component_id='month_select', component_property='value')]
+                       )
+    def update_savings_month_wise_bar_graph(month_select):
+        return savings_month_wise_bar_graph()
+
+    @dash_app.callback(Output(component_id='my_account', component_property='children'),
+                       [Input(component_id='month_select', component_property='value')]
+                       )
+    def update_header_link(month_select):
+        return get_user_name()
 
     return dash_app.server
