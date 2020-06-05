@@ -61,7 +61,7 @@
 					<tbody class="text-right">
 						{% for row in table %}
 							<tr id="{{row['id']}}">
-								<th><input type="checkbox" id="check_{{row[id]}}" ></th>
+								<th><a href="/edit_expence/{{row['id']}}"><button class="btn btn-danger">Edit</button></a></th>
 								<th>{{ row['name'] }}</th>
 								<th>{{ row['date'] }}</th>
 								<th>{{ row['time'] }}</th>

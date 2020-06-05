@@ -59,6 +59,82 @@ def add_expence():
     return render_template("add_expence.html", form=form, title="Add Transaction")
 
 
+@app.route("/delete_expence/<id>")
+@login_required
+def delete_expence(id):
+    b = Expences.query.filter_by(id=id).first()
+    if b.user_id == current_user.id:
+        Expences.query.filter_by(id=id).delete()
+        db.session.commit()
+        flash("Transaction Deleted :( ", "danger")
+        return redirect("/")
+    else:
+        flash("This is not your data to delete!", "danger")
+        return redirect("/")
+
+
+@app.route("/edit_expence/<id>", methods=["GET", "POST"])
+@login_required
+def edit_expence(id):
+    id = int(id)
+    form = Expence_form()
+    b = Expences.query.filter_by(id=id).first()
+    if b.user_id == current_user.id:
+        if request.method == 'POST' and form.validate_on_submit():
+            expence = Expences.query.filter_by(id=id).first()
+            expence.name = request.form.get("name").title()
+            date = request.form.get("date")
+            amount = request.form.get("amount")
+            time = request.form.get("time")
+            expence.date_time = datetime.strptime((date + " " + time), '%Y-%m-%d %H:%M')
+            expence.user_id = current_user.id
+            transaction_type = request.form.get("transaction_type")
+            expence.type_subtype_id = request.form.get("subtype")
+            expence.frequency_id = request.form.get("frequency")
+            expence.payment_method = request.form.get("payment_method")
+            expence.comments = request.form.get("comment")
+            if transaction_type == "1":
+                expence.debit = amount
+                expence.credit = 0
+            else:
+                expence.debit = 0
+                expence.credit = amount
+            db.session.commit()
+            flash("Transaction saved.", "success")
+            return redirect("/")
+        else:
+            form.type.choices = [(type.id, type.name) for type in Type.query.all()]
+            form.type.default = Type_subtype.query.filter_by(id=b.type_subtype_id).first().type_id
+            form.frequency.choices = [(fre.id, fre.name) for fre in Frequency.query.all()]
+            form.frequency.default = b.frequency_id
+            form.payment_method.choices = [(payment_method.id, payment_method.name) for payment_method in
+                                           Payment_medium.query.all()]
+            form.payment_method.default = b.payment_id
+            subtypes = Type_subtype.query \
+                .filter_by(type_id=Type_subtype.query.filter_by(id=b.type_subtype_id).first().type_id)
+            form.subtype.choices = [[i.id, i.subtype] for i in subtypes]
+            form.subtype.default = b.type_subtype_id
+            if b.credit == 0:
+                form.transaction_type.default = 1
+            else:
+                form.transaction_type.default = 2
+            form.process()
+
+            form.name.data = b.name
+            form.date.data = b.date_time.date()
+            form.time.data = b.date_time.time()
+            if b.credit == 0:
+                form.amount.data = b.debit
+            else:
+                form.amount.data = b.credit
+            form.comment.data = b.comments
+
+            return render_template("edit_expense.html", form=form, title="Edit Transaction", id=id)
+    else:
+        flash("This is not your data to edit!", "danger")
+        return redirect("/")
+
+
 @app.route('/add_table/<month>/<year>/<id>')
 @login_required
 def add_table(month, year, id):
@@ -66,8 +142,8 @@ def add_table(month, year, id):
     if month == 'all':
         table_data_touple = db.session.query(Expences) \
             .order_by(Expences.date_time.desc()) \
-            .filter(Expences.user_id == current_user.id)\
-            .filter(Expences.date_time <= last_expence_time)\
+            .filter(Expences.user_id == current_user.id) \
+            .filter(Expences.date_time <= last_expence_time) \
             .filter(Expences.id != id) \
             .limit(10)
     else:
