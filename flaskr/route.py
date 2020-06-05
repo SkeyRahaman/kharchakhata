@@ -176,16 +176,19 @@ def settings():
     form_password = Reset_password()
     if form_password.validate_on_submit():
         cpassword = request.form.get('password')
-        if bcrypt.check_password_hash(current_user.password, cpassword):
-            current_user.password = bcrypt.generate_password_hash(request.form.get('cnpassword')).decode('utf-8')
-            db.session.commit()
-            flash("Password Updated Successful!.", "success")
+        if cpassword:
+            if bcrypt.check_password_hash(current_user.password, cpassword):
+                current_user.password = bcrypt.generate_password_hash(request.form.get('cnpassword')).decode('utf-8')
+                db.session.commit()
+                flash("Password Updated Successful!.", "success")
+            else:
+                flash("Current Password Does Not Match!", "danger")
         elif current_user.password == "External Website Verified.":
             current_user.password = bcrypt.generate_password_hash(request.form.get('cnpassword')).decode('utf-8')
             db.session.commit()
             flash("Password Updated Successful!.", "success")
         else:
-            flash("Current Password Does Not Match!", "danger")
+            flash("Please enter your current password.", "info")
     return render_template("settings.html",
                            form_password=form_password,
                            title="Settings")
