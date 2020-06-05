@@ -136,9 +136,12 @@ def login():
     if form.validate_on_submit():
         password = request.form.get('password')
         user = Users.query.filter_by(email=request.form.get('email').lower()).first()
-        if user and bcrypt.check_password_hash(user.password, password):
-            login_user(user, remember=request.form.get("remember"))
-            session['user_name'] = user.fname
+        if user:
+            if user.password == "External Website Verified.":
+                flash("You have registered through google authentication. Please login with google.", "info")
+            else:
+                if bcrypt.check_password_hash(user.password, password):
+                    login_user(user, remember=request.form.get("remember"))
         else:
             flash("Email address and password does not match!.", "info")
         return redirect("/")
