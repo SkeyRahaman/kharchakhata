@@ -2,10 +2,6 @@
 	background-image: linear-gradient(to right , #1FBFCA , #E8C718);
 	font-size: 2vw;
 }
-.heading a{
-	color: #DC004B;
-	font-size: 2vw;
-}
 .heading a:hover{
 	color: #DC004B;
 }

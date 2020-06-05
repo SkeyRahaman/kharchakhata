@@ -2,54 +2,9 @@
 	background-image: linear-gradient(to right , #1FBFCA , #E8C718);
 	font-size: 1.5vw;
 }
-.heading a{
-	color: #DC004B;
-	font-size: 2vw;
-}
 .heading a:hover{
 	color: #DC004B;
 }
-
-.entry_form_container{
-	width: 100%;
-	top : 0;
-	position: absolute;
-	z-index: 5;
-}
-
-.entry_conformation{
-	border-radius: 10px;
-	background-color: white;
-	border:2px solid gray;
-	top : 5%;
-	position: absolute;
-	z-index: 6;
-	margin: 25%;
-	margin-top: 10%;
-	width: 50%;
-	padding: 5%;
-	display: none;
-	overflow : auto;
-}
-
-
-
-.new_entry_form{
-	border-radius: 10px;
-	background-color: white;
-	opacity: 75;
-	border: 2px solid gray;
-	width: 75%;
-	margin : auto;
-	margin-top: 10%;
-	margin-bottom: 10%;
-	padding: 1vw;
-	display: none;
-	bottom: 0;
-/*	max-height: 60vw;*/
-	overflow : auto;
-}
-
 a:hover {
 	cursor: pointer;
 }
@@ -57,19 +12,6 @@ a:hover {
 .side_btns .card-body{
 	margin: 10px;
 }
-
-
-
-
-/*.expand_it {
-	text-align: center;
-	margin: 1vw;
-	border-radius: 1vw;
-	transition: margin 2s;
-}
-.expand_it:hover{
-	margin: 0vw;
-}*/
 
 #total_earning_card_body{
 	border :2px solid #FEC107;
