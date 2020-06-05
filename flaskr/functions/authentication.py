@@ -1,5 +1,7 @@
 from flaskr.functions.database import *
-from flask import session, flash
+from flask import session, flash, request
+from flaskr import app
+import requests
 
 
 def login_with_for_admin(email, password):
@@ -13,3 +15,7 @@ def login_with_for_admin(email, password):
         return True
     else:
         return False
+
+
+def get_google_provider_cfg():
+    return requests.get(app.config['GOOGLE_DISCOVERY_URL']).json()

@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
+from oauthlib.oauth2 import WebApplicationClient
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
@@ -12,6 +13,8 @@ bcrypt = Bcrypt(app)
 loginmanager = LoginManager(app)
 loginmanager.login_view = 'home'
 loginmanager.login_message_category = 'info'
+
+client = WebApplicationClient(app.config["GOOGLE_CLIENT_ID"])
 
 with app.app_context():
     from flaskr.authentication import auth

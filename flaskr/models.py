@@ -67,7 +67,7 @@ class Users(db.Model, UserMixin):
                  fname, email, password,
                  mname=None, lname=None,
                  dob=None, phone=None,
-                 sex=1):
+                 sex=1, email_conformation=0):
         self.fname = fname
         self.mname = mname
         self.lname = lname
@@ -76,6 +76,7 @@ class Users(db.Model, UserMixin):
         self.phone = phone
         self.password = password
         self.sex_id = sex
+        self.email_conformation = email_conformation
 
 
 class Frequency(db.Model):

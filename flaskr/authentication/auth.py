@@ -1,17 +1,133 @@
 from flask import Blueprint, redirect, render_template, request
-from flaskr import app, db, bcrypt
+from flaskr import app, db, bcrypt, client
 from flaskr.functions import *
 from flaskr.models import Users, Sex
 from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form, \
     Creat_new_password, Reset_password, Edit_profile_form
 from flask_login import login_user, logout_user, login_required, current_user
 from itsdangerous import URLSafeTimedSerializer, URLSafeSerializer
+import json
+import requests
 
 bp = Blueprint('auth', __name__,
                template_folder='templates',
                static_folder='static')
 s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 email_link = URLSafeSerializer(app.config['SECRET_KEY'])
+
+
+@app.route("/google_login")
+def login():
+    # Find out what URL to hit for Google login
+    google_provider_cfg = get_google_provider_cfg()
+    authorization_endpoint = google_provider_cfg["authorization_endpoint"]
+
+    # Use library to construct the request for Google login and provide
+    # scopes that let you retrieve user's profile from Google
+    request_uri = client.prepare_request_uri(
+        authorization_endpoint,
+        redirect_uri=request.base_url + "/callback",
+        scope=["openid", "email", "profile"],
+    )
+    return redirect(request_uri)
+
+
+@app.route("/google_login/callback")
+def callback():
+    # Get authorization code Google sent back to you
+    code = request.args.get("code")
+
+    # Find out what URL to hit to get tokens that allow you to ask for
+    # things on behalf of a user
+    google_provider_cfg = get_google_provider_cfg()
+    token_endpoint = google_provider_cfg["token_endpoint"]
+
+    # Prepare and send a request to get tokens! Yay tokens!
+    token_url, headers, body = client.prepare_token_request(
+        token_endpoint,
+        authorization_response=request.url,
+        redirect_url=request.base_url,
+        code=code
+    )
+    token_response = requests.post(
+        token_url,
+        headers=headers,
+        data=body,
+        auth=(app.config["GOOGLE_CLIENT_ID"], app.config["GOOGLE_CLIENT_SECRET"]),
+    )
+
+    # Parse the tokens!
+    client.parse_request_body_response(json.dumps(token_response.json()))
+
+    # Now that you have tokens (yay) let's find and hit the URL
+    # from Google that gives you the user's profile information,
+    # including their Google profile image and email
+    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
+    uri, headers, body = client.add_token(userinfo_endpoint)
+    userinfo_response = requests.get(uri, headers=headers, data=body)
+
+    # You want to make sure their email is verified.
+    # The user authenticated with Google, authorized your
+    # app, and now you've verified their email through Google!
+    if userinfo_response.json().get("email_verified"):
+
+        try:
+            email = userinfo_response.json()["email"]
+        except:
+            email = ""
+        b = Users.query.filter_by(email=email).first()
+        if b:
+            flash("Loged in as " + b.fname, "success")
+            login_user(b, remember=False)
+        else:
+
+            try:
+                fname = userinfo_response.json()["given_name"]
+            except:
+                fname = ""
+            try:
+                lname = userinfo_response.json()["family_name"]
+            except:
+                lname = ""
+
+            try:
+                if userinfo_response.json()["email_verified"]:
+                    email_verified = 1
+                else:
+                    email_verified = 0
+            except:
+                email_verified = 0
+            new_user = Users(
+                fname=fname.title(),
+                lname=lname.title(),
+                email=email.lower(),
+                email_conformation=email_verified,
+                sex=4,
+                password="External Website Verified."
+            )
+            db.session.add(new_user)
+            db.session.commit()
+            flash("Registration Successful!. Please Login with Your Email and Password!.", "success")
+            if email_verified == "0":
+                token = email_link.dumps(email, salt="this_is_the_email")
+                conform_url = "http://" + str(request.host) + "/conform_email/" + str(token)
+                send_welcome_email(email=email, fname=fname, conform_url=conform_url)
+                flash(
+                    "A conformation Email is been send to your email address. Please verify your email address to use reset password functions.",
+                    "info")
+            b = Users.query.filter_by(email=email).first()
+            if b:
+                flash("Account created and Logged in as " + b.fname, "success")
+                send_welcome_email_for_conformed_emails(b.email, b.fname)
+                login_user(new_user, remember=False)
+
+            else:
+                flash("Login Problem... Try after some time.", "danger")
+
+    else:
+        return "User email not available or not verified by Google.", 400
+
+    return redirect("/")
 
 
 @bp.route("/login", methods=["get", 'post'])
@@ -51,9 +167,11 @@ def registration_form():
 
         flash("Registration Successful!. Please Login with Your Email and Password!.", "success")
         token = email_link.dumps(email, salt="this_is_the_email")
-        conform_url = "http://" + str(request.host) + "/conform_password/" + str(token)
+        conform_url = "http://" + str(request.host) + "/conform_email/" + str(token)
         send_welcome_email(email=email, fname=fname, conform_url=conform_url)
-        flash("A conformation Email is been send to your email address. Please verify your email address to use reset password functions.","info")
+        flash(
+            "A conformation Email is been send to your email address. Please verify your email address to use reset password functions.",
+            "info")
         return redirect("/")
     return render_template("register.html", title="Register", form=form)
 
@@ -73,7 +191,7 @@ def forgot_password():
         return render_template("forgot_password_one.html", form=form)
 
 
-@bp.route('/conform_password/<token>')
+@bp.route('/conform_email/<token>')
 def conform_password(token):
     email = email_link.loads(token, salt="this_is_the_email")
     b = Users.query.filter(Users.email == email).first()
