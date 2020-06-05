@@ -153,7 +153,7 @@ def dashboard(month, year):
             'comment': row.comments
         })
     month_name = db.session.query(func.month(Expences.date_time),
-                                  func.year(Expences.date_time)).distinct()
+                                  func.year(Expences.date_time)).filter(Expences.user_id == current_user.id).distinct()
     _ = sorted([[i[0], i[1], calendar.month_name[i[0]]] for i in month_name], key=lambda x: (x[1], x[0]), reverse=True)
     month_name = [[i[2], i[1]] for i in _]
 
