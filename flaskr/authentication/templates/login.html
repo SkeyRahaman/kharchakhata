@@ -4,56 +4,6 @@
 
 
 {% block content %}
-<style type="text/css">
-	.loginBtn {
-		box-sizing: border-box;
-		position: relative;
-		/* width: 13em;  - apply for fixed size */
-		margin: 0.2em;
-		padding: 0 15px 0 46px;
-		border: none;
-		text-align: left;
-		line-height: 34px;
-		white-space: nowrap;
-		border-radius: 0.2em;
-		font-size: 16px;
-		color: #FFF;
-	}
-	.loginBtn:before {
-		content: "";
-		box-sizing: border-box;
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 34px;
-		height: 100%;
-	}
-	.loginBtn:focus {
-	    outline: none;
-	}
-	.loginBtn:active {
-	    box-shadow: inset 0 0 0 32px rgba(0,0,0,0.1);
-	}
-	/* Google */
-	.loginBtn--google {
-	    /*font-family: "Roboto", Roboto, arial, sans-serif;*/
-	    background: #DD4B39;
-	}
-	.loginBtn--google:before {
-	    border-right: #BB3F30 1px solid;
-	    background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png') 6px 6px no-repeat;
-	}
-	.loginBtn--google:hover,
-	.loginBtn--google:focus {
-	    background: #E74B37;
-	}
-</style>
-
-
-
-
-
-
 <div class="row">
 	<div class="col-7"> 
 		<div class="login container m-5 pr-5 bg-light card">
@@ -120,7 +70,7 @@
 				<div class="center_right col col-6 text-center">
 					<div class="text-center ml-0" id="google_api">
 						<a href="/google_login" >
-							<img class="img-fluid" src="{{url_for('static', filename='images/google_login.png')}}" style="object-fit: cover;height: 75px;">
+							<img class="img-fluid image_normal" src="{{url_for('static', filename='images/google_login.png')}}">
 						</a>
 					</div><br>
 				</div>
@@ -135,219 +85,16 @@
 			</div>
 		</div>
 </div>
-
+<style type="text/css">
+	.image_normal{
+		object-fit: cover;
+		height: 75px;
+		position: relative;
+        display: inline-block;
+	}
+</style>
 
 
 
 
 {% endblock %}
-
-
-
-
-
-<!-- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Kharcha Khata</title>
-	<link rel="stylesheet" type="text/css" href="{{url_for('static' , filename = 'css/login.css' )}}">
-	<link rel="icon" href="https://pngimg.com/uploads/letter_k/letter_k_PNG69.png" type="image/png">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<meta name="google-signin-client_id" content="1054655630563-kv2gk446jtt8hn63uvfpav80mr7pbm38.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<meta charset="UTF-8">
-	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v6.0"></script>
-
-
-
-
-</head>
-<body>
-
-	<div class = "center_main">
-		<div class="heading">
-				KHARCHAKHATA
-		</div>
-
-
-
-
-
-
-		<div class="login container" id="login_window">
-			
-			<div class="row">
-				<div class="container center_left col col-md-12 col-sm-12">
-					<form method="POST" action="/login_validation">
-						{{ form.hidden_tag() }}
-						<fieldset class="form-group">
-							<legend class="border-bottom mb-4">
-								Sign In Now
-							</legend>
-							<div class="form-group">
-								{{ form.email.label(class="form-control-label")}}
-								{{ form.email(class="form-control form-control-lg")}}
-							</div>
-							<div class="form-group">
-								{{ form.password.label(class="form-control-label")}}
-								{{ form.password(class="form-control form-control-lg")}}
-							</div>
-							<div class="form-check">
-								{{ form.remember(class="form-check-input")}}
-								{{ form.remember.label(class="form-control-label")}}
-							</div>
-						</fieldset>
-						<div class="form-group">
-							<div class="row">
-								<div class="col-6">
-									<a href="/forgot_password" class="btn btn-outline-danger" role="button">Forgot password</a>
-								</div>
-								<div class="col-6">
-									{{ form.submit(class='btn btn-success float-right')}}
-								</div>
-							</div>
-						</div>
-					</form>					
-				</div>
-			
-				<div class="or col col-md-2 col-sm-12">
-					<p>OR</p>
-				</div>
-
-				<div class="center_right col col-md-4 col-sm-12">
-					<div id="google_api">
-						<div class="g-signin2" data-onsuccess="onSignIn">
-							
-						</div>
-
-					</div><br>
-					<div id="fb_api">
-						<div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false">
-							
-						</div>
-					</div>
-				</div>
-
-				<div class="text-center col-12">
-					<a href="{{ url_for('auth.registration_form') }}">
-						<button type="button" class="btn btn-outline-dark">
-						Do not have an account? Register!
-						</button>
-					</a>
-				</div>
-			</div>
-		</div>
-
-
-
-		<div class="center_main_register" id="registration_window">
-			<p>Register Here:-</p>
-			<form class="registration_Form" method="post" action="/register_user" id="registration_Form" onsubmit="password_validate()">
-
-				<div class="tab" id="names">
-					<label for="first_name">First name...</label>
-					<input id="first_name" class="form-control" placeholder="First name..." name="fname">
-					<small class="form-text text-muted required">*Requires</small>
-					<label for="middle_name" required/>Middle name...</label>
-					<input id="middle_name" class="form-control" placeholder="Middle name..." name="mname">
-					<label for="last_name">Last name...</label>
-				 	<input id="last_name" class="form-control" placeholder="Last name..." name="lname">
-					<small class="form-text text-muted required">*Requires</small>
-				</div>
-
-				<div class="tab" id="contact">
-					<label for="email_address">E-mail address...</label>
-					<input id="email_address" class="form-control" placeholder="E-mail..." name="remail">
-					<small class="form-text text-muted required">*Requires</small>
-					<label for="phone_number">Phone number...</label>
-					<input id="phone_number" class="form-control" placeholder="phone Number..." name="rphone">
-					<small id="phone_number_help" class="form-text text-muted">Please include the country code!</small>
-				</div>
-
-				<div class="tab" id="birthday">
-					<div class="form-group">
-						<label>Enter your Date of birth...</label><br>
-				 		<input id="date" class="form-conrol" type="date" name="dob"><br>
-						<small class="form-text text-muted required">*Requires</small>
-				 	</div>
-				 	<div class="form-group">
-				 		<label>Gender...</label><br>
-				 		<select id="sex" name="sex" class="form-conrol">
-				 			<option value="null">Select</option>
-							<option value="female">Female</option>
-							<option value="male">Male</option>
-							<option value="others">Others</option>
-						</select>
-						<br><small class="form-text text-muted required">*Requires</small>
-					</div>
-				</div>
-
-
-				<div class="tab">
-					<label for="password">Password</label>
-					<input id="password" class="form-control" placeholder="Password..." type="password" name="password">
-					<small class="form-text text-muted required">*Requires</small>
-					<label for="password">Conform password..</label>
-					<input id="cpassword" class="form-control" placeholder="Conform Password..." type="password" name="cpassword">
-					<small class="form-text text-muted required">*Requires</small>
-				</div>
-
-				<button id="previous_btn" type="button" class="btn btn-outline-warning float-left nav_btn">Previous</button>
-				<button id="register_btn" type="button" form="registration_Form" class="btn btn-outline-success float-right nav_btn" >Register</button>
-				<button id="next_btn" type="button" class="btn btn-outline-primary float-right nav_btn">Next</button>
-				
-				
-				
-
-
-			</form>
-
-			<div class="down_button text-center go_to_login">
-					<button type="button" class="btn btn-outline-dark">Already have an account? Login!</button>
-			</div>
-			
-		</div>
-
-
-
-
-
-
-
-		
-
-
-		
-
-
-	</div>
-	
-
-	<script type="text/javascript" src="{{url_for('static' , filename = 'js/login.js' )}}"></script>
-
-</body>
-</html> --> -->
