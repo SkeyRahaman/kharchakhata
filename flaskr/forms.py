@@ -39,8 +39,7 @@ class Forgot_password_form(FlaskForm):
 
 
 class Reset_password(FlaskForm):
-    password = PasswordField('Password',
-                             validators=[DataRequired()])
+    password = PasswordField('Password')
     npassword = PasswordField('New Password',
                               validators=[DataRequired()])
     cnpassword = PasswordField('Confirm New Password',

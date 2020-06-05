@@ -18,22 +18,21 @@
 							<legend class="border-bottom mb-4">
 								Change Password.
 							</legend>
-							<div class="form-group">
-								{{ form_password.password.label(class="form-control-label")}}
-								{% if form_password.password.errors %}
-									{{ form_password.password(class="form-control form-control-lg is-invalid")}}
-									<div>
-										{% for error in form_password.password.errors %}
-											<span class="text-danger">{{ error }}</span>
-										{% endfor %}
-									</div>
-								{% else %}
-									{{ form_password.password(class="form-control form-control-lg")}}
-								{% endif %}
-
-
-								
-							</div>
+							{% if current_user.password != "External Website Verified." %}
+								<div class="form-group">
+									{{ form_password.password.label(class="form-control-label")}}
+									{% if form_password.password.errors %}
+										{{ form_password.password(class="form-control form-control-lg is-invalid")}}
+										<div>
+											{% for error in form_password.password.errors %}
+												<span class="text-danger">{{ error }}</span>
+											{% endfor %}
+										</div>
+									{% else %}
+										{{ form_password.password(class="form-control form-control-lg")}}
+									{% endif %}
+								</div>
+							{% endif %}
 							<div class="form-group">
 								{{ form_password.npassword.label(class="form-control-label")}}
 								{% if form_password.npassword.errors %}

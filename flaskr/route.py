@@ -180,6 +180,10 @@ def settings():
             current_user.password = bcrypt.generate_password_hash(request.form.get('cnpassword')).decode('utf-8')
             db.session.commit()
             flash("Password Updated Successful!.", "success")
+        elif current_user.password == "External Website Verified.":
+            current_user.password = bcrypt.generate_password_hash(request.form.get('cnpassword')).decode('utf-8')
+            db.session.commit()
+            flash("Password Updated Successful!.", "success")
         else:
             flash("Current Password Does Not Match!", "danger")
     return render_template("settings.html",
