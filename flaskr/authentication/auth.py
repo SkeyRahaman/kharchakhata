@@ -16,8 +16,8 @@ s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 email_link = URLSafeSerializer(app.config['SECRET_KEY'])
 
 
-@app.route("/google_login")
-def login():
+@bp.route("/google_login")
+def login_google():
     # Find out what URL to hit for Google login
     google_provider_cfg = get_google_provider_cfg()
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
@@ -32,8 +32,8 @@ def login():
     return redirect(request_uri)
 
 
-@app.route("/google_login/callback")
-def callback():
+@bp.route("/google_login/callback")
+def callback_google():
     # Get authorization code Google sent back to you
     code = request.args.get("code")
 
@@ -127,6 +127,16 @@ def callback():
     else:
         return "User email not available or not verified by Google.", 400
 
+    return redirect("/")
+
+
+@app.route("/facebook_login")
+def login_facebook():
+    return redirect("/")
+
+
+@app.route("/facebook_login/callback")
+def callback_facebook():
     return redirect("/")
 
 
