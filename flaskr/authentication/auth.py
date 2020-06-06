@@ -27,7 +27,7 @@ def login():
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
         redirect_uri=request.base_url + "/callback",
-        scope=["openid", "email", "profile", "gender"],
+        scope=["openid", "email", "profile"],
     )
     return redirect(request_uri)
 
@@ -69,10 +69,6 @@ def callback():
     # You want to make sure their email is verified.
     # The user authenticated with Google, authorized your
     # app, and now you've verified their email through Google!
-    for i in range(10):
-        print("***********************")
-
-    print(userinfo_response.json())
     if userinfo_response.json().get("email_verified"):
 
         try:
