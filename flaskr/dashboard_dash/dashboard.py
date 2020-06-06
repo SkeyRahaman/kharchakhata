@@ -137,7 +137,7 @@ def create_dashboard(server=app):
         # DashBoard
 
         html.Div(className="row container-fluid", children=[
-            html.Div(className="col-md-6 col-sm-12 p-2 mx-auto", children=[
+            html.Div(className="col-lg-6 col-md-12 p-2 mx-auto", children=[
                 html.Div(className="bg-light card row", children=[
                     html.Div(className="col-12 btn-group btn-group-toggle mx-auto mt-2", id="fig1_togel", children=[
                         html.Label(className="btn btn-outline-dark active", children=[
@@ -163,7 +163,7 @@ def create_dashboard(server=app):
                     ]),
                 ])
             ]),
-            html.Div(className="col-md-3 col-sm-6 p-2 mx-auto", children=[
+            html.Div(className="col-lg-3 col-md-6 p-2 mx-auto", children=[
                 html.Div(className="m-auto card bg-light", children=[
                     dcc.Dropdown(id="type_graph_select",
                                  searchable=False,
@@ -185,7 +185,7 @@ def create_dashboard(server=app):
                     ),
                 ])
             ]),
-            html.Div(className="col-md-3 col-sm-6 p-2 mx-auto", children=[
+            html.Div(className="col-lg-3 col-md-6 p-2 mx-auto", children=[
                 html.Div(className="m-auto card bg-light", children=[
                     dcc.Dropdown(id="subtype_graph_select",
                                  searchable=False,
@@ -210,7 +210,7 @@ def create_dashboard(server=app):
                     )
                 ])
             ]),
-            html.Div(className="col-md-3 col-sm-6 p-2 mx-auto", children=[
+            html.Div(className="col-lg-3 col-md-6 p-2 mx-auto", children=[
                 html.Div(className="m-auto card bg-light", children=[
                     dcc.Dropdown(id="frequency_graph_select",
                                  searchable=False,
@@ -232,7 +232,7 @@ def create_dashboard(server=app):
                     ),
                 ])
             ]),
-            html.Div(className="col-md-3 col-sm-6 p-2 mx-auto", children=[
+            html.Div(className="col-lg-3 col-md-6 p-2 mx-auto", children=[
                 html.Div(className="m-auto card bg-light", children=[
                     dcc.Dropdown(id="payment_type_graph_select",
                                  searchable=False,
@@ -256,7 +256,7 @@ def create_dashboard(server=app):
                     )
                 ]),
             ]),
-            html.Div(className="col-md-6 col-sm-12 p-2 mx-auto", children=[
+            html.Div(className="col-lg-6 col-md-12 p-2 mx-auto", children=[
                 html.Div(className="m-auto card bg-light", children=[
                     dcc.Graph(
                         id="expenditure_income_line_graph",
@@ -264,7 +264,7 @@ def create_dashboard(server=app):
                     )
                 ]),
             ]),
-            html.Div(className="col-md-6 col-sm-12 p-2 mx-auto", children=[
+            html.Div(className="col-lg-6 col-md-12 p-2 mx-auto", children=[
                 html.Div(className="m-auto card bg-light", children=[
                     dcc.Graph(
                         id="savings_month_wise_bar_graph",
