@@ -19,7 +19,7 @@ const load_more_table = () => {
 					row = table.insertRow();
 					row.setAttribute("id", data[i]['id']);
 					cell = row.insertCell();
-					cell.innerHTML = ('<th><input type="checkbox" name="edit" id="check_'+ data[i][data[i].length-1] + '"></th>');
+					cell.innerHTML = ('<th><a href="/edit_expence/' + data[i]['id'] + '"><button class="btn btn-sm btn-danger">Edit</button></a>');
 					cell = row.insertCell();
 					cell.innerHTML = ("<strong>"+data[i]['name']+"</strong>");
 					cell = row.insertCell();

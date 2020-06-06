@@ -59,7 +59,22 @@
 							</div>
 
 							<div class="form-group">
-								{{ form.email.label(class="form-control-label")}}
+								<div class="ml-3">
+									<div class="row">
+										<div>
+											{{ form.email.label(class="form-control-label")}}  
+										</div>
+										{% if current_user.email_conformation == 1 %}
+											<div class="ml-2">
+												<img title="Account Verified!" class="m-auto " src="{{url_for('static', filename='images/green_tic.png')}}" height="15" width="15" >
+											</div>
+										{% else %}
+											<div class="ml-2">
+												<img title="Account Not Verified!" class="m-auto " src="{{url_for('static', filename='images/red_tic.png')}}" height="15" width="15" onclick="send_email_conformation_mail()">
+											</div>
+										{% endif %}
+									</div>
+								</div>
 								{% if form.email.errors %}
 									{{ form.email(class="form-control form-control-lg is-invalid")}}
 									<div>
@@ -85,21 +100,6 @@
 									{{ form.phone(class="form-control form-control-lg", value=current_user.phone) }}
 								{% endif %}
 							</div>
-							
-							<!-- <label for="first_name">First name...</label>
-							<input id="first_name" class="form-control"  name="fname" value="{{current_user.fname}}">
-
-							<label for="middle_name" required/>Middle name...</label>
-							<input id="middle_name" class="form-control"  name="mname" value="{{current_user.mname}}">
-
-							<label for="last_name">Last name...</label>
-						 	<input id="last_name" class="form-control"  name="lname" value="{{current_user.lname}}">
-						
-							<label for="email_address">E-mail address...</label>
-							<input id="email_address" class="form-control"  name="remail" value="{{current_user.email}}">
-
-							<label for="phone_number">Phone number...</label>
-							<input id="phone_number" class="form-control"  name="rphone" value="{{current_user.phone}}"> -->
 						
 							<br>
 

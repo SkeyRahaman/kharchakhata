@@ -24,6 +24,9 @@ document.getElementById("reset_btn").addEventListener("click" , function(){
 	window.location.reload();
 });
 
-// document.getElementById("save_btn").addEventListener("click" , function(){
-// 	window.location.href = "/edit_profile";
-// });
+const send_email_conformation_mail = () =>{
+	var ask = window.confirm("Your Email address is in verified with us. \r\nSend a confirmation mail to your registered email address.");
+    if (ask) {
+        window.location.href = "/my_account/send_mail";
+    }
+}

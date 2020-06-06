@@ -110,7 +110,7 @@ def callback():
             flash("Registration Successful!. Please Login with Your Email and Password!.", "success")
             if email_verified == "0":
                 token = email_link.dumps(email, salt="this_is_the_email")
-                conform_url = "http://" + str(request.host) + "/conform_email/" + str(token)
+                conform_url = "https://" + str(request.host) + "/conform_email/" + str(token)
                 send_welcome_email(email=email, fname=fname, conform_url=conform_url)
                 flash(
                     "A conformation Email is been send to your email address. Please verify your email address to use reset password functions.",
@@ -170,7 +170,7 @@ def registration_form():
 
         flash("Registration Successful!. Please Login with Your Email and Password!.", "success")
         token = email_link.dumps(email, salt="this_is_the_email")
-        conform_url = "http://" + str(request.host) + "/conform_email/" + str(token)
+        conform_url = "https://" + str(request.host) + "/conform_email/" + str(token)
         send_welcome_email(email=email, fname=fname, conform_url=conform_url)
         flash(
             "A conformation Email is been send to your email address. Please verify your email address to use reset password functions.",
@@ -185,7 +185,7 @@ def forgot_password():
     if form.validate_on_submit():
         email = request.form.get('email').lower()
         token = s.dumps(email, salt="this_is_the_email")
-        reset_url = "http://" + str(request.host) + "/reset_password/" + str(token)
+        reset_url = "https://" + str(request.host) + "/reset_password/" + str(token)
         send_mail(to=email, name=Users.query.filter_by(email=email).first().fname, reset_url=reset_url)
         flash("URL to reset your password is send to " + email + ", Visit your Email to Reset Your Password!",
               "success")
@@ -247,6 +247,18 @@ def my_account():
     return render_template('my_account.html',
                            title="My Account",
                            form=form)
+
+
+@bp.route('/my_account/send_mail', methods=['post', 'get'])
+@login_required
+def my_account_send_confirmation_mail():
+    token = email_link.dumps(current_user.email, salt="this_is_the_email")
+    conform_url = "https://" + str(request.host) + "/conform_email/" + str(token)
+    send_welcome_email(email=current_user.email, fname=current_user.fname, conform_url=conform_url)
+    flash(
+        "A conformation Email is been send to your email address. Please verify your email address to use reset password functions.",
+        "info")
+    return redirect("/my_account")
 
 
 @bp.route('/logout')
