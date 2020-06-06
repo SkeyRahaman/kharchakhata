@@ -10,8 +10,8 @@ class Config:
     SECRET_KEY = os.urandom(24)
 
     # Database Uri
-    # SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://admin:9038383080@database-2.csifl31dpmlc.us-east-2.rds.amazonaws.com/kharchakhata'
-    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:@127.0.0.1/testing'
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://admin:9038383080@database-2.csifl31dpmlc.us-east-2.rds.amazonaws.com/kharchakhata'
+    # SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:@127.0.0.1/testing'
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -20,4 +20,4 @@ class Config:
     GOOGLE_CLIENT_SECRET = "PG3GMDRYysLeGDSHO_EStP6v"
     GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
-    DEBUG = True
+    DEBUG = False
