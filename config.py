@@ -24,4 +24,4 @@ class Config:
     FACEBOOK_CLIENT_ID = "253088142772668"
     FACEBOOK_CLIENT_SECRET = "cd3edf3fce9a462edfd98b8e99241ffe"
 
-    DEBUG = False
+    DEBUG = True
