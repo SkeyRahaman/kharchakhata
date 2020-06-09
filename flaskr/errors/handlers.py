@@ -66,7 +66,8 @@ def error_500(error):
                     <h1>Server side error.</h1>
                     <h2>500 error.</h2>
                     <p>We are currently working on this issue.</p>
-                    <p>Please check after some time.</p>
+                    <p>Please wait for 2 second it should resolve by it self..</p>
+                    <p>If not, Please check after some time. Or go back...</p>
                 </div>
             </div>
             <div class="text-center">
@@ -81,6 +82,7 @@ def error_500(error):
                 </a>
             </div>
             <script type="text/javascript">
+                setTimeout(function(){location.reload()}, 1000);
                 if (window.screen.height <= document.body.clientHeight){
                     document.getElementsByClassName("footer")[0].style.position = "relative";
                 } else {
