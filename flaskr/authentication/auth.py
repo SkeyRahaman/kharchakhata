@@ -79,10 +79,6 @@ def callback_google():
         b = Users.query.filter_by(email=email).first()
         if b:
             flash("Loged in as " + b.fname, "success")
-            try:
-                b.picture = userinfo_response.json()["picture"]
-            except:
-                pass
             if b.email_conformation == 0:
                 try:
                     if userinfo_response.json()["email_verified"]:
@@ -288,6 +284,7 @@ def change_dp():
             )
             db.session.commit()
             flash("Profile picture updated..", "success")
+            return redirect("/my_account")
         except:
             flash("Cannot uplode file!.. Try after some time.!.", "danger")
 
@@ -300,7 +297,7 @@ def remove_dp():
     user = Users.query.filter_by(email=current_user.email).first()
     user.picture = None
     db.session.commit()
-    return redirect("/change_dp")
+    return redirect("/my_account")
 
 
 @bp.route('/my_account/send_mail', methods=['post', 'get'])

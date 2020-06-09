@@ -3,7 +3,7 @@ from wtforms_components import TimeField
 from wtforms import StringField, PasswordField, SelectField, SubmitField, BooleanField, FloatField, TextAreaField, \
     IntegerField, FileField
 from wtforms.fields.html5 import DateField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, optional
 from flask_wtf.file import FileAllowed, FileRequired
 from flaskr.models import Users, Sex
 from flask import flash
@@ -80,7 +80,7 @@ class Edit_profile_form(FlaskForm):
                         ])
     sex = SelectField("Gender", choices=[(str(sex.id), sex.type) for sex in Sex.query.all()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    dob = DateField("Date of Birth")
+    dob = DateField("Date of Birth", validators=[optional()])
     phone = StringField("Phone Number (Along with country code).", validators=[Length(max=14)])
     submit = SubmitField('Sign Up')
     current_email = None
@@ -109,7 +109,7 @@ class RegistrationForm(FlaskForm):
                         ])
     sex = SelectField("Gender", choices=[(str(sex.id), sex.type) for sex in Sex.query.all()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    dob = DateField("Date of Birth")
+    dob = DateField("Date of Birth", validators=[optional()])
     phone = StringField("Phone Number (Along with country code).", validators=[Length(max=14)])
     password = PasswordField('Password',
                              validators=[DataRequired(), Length(min=6, max=20)])

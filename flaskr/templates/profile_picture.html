@@ -31,15 +31,26 @@
 									</div>
 									<div>
 										{% for error in form.dp.errors %}
-											<span>{{ error }}</span>
+											<span class="text-danger">{{ error }}</span>
 										{% endfor %}
 									</div>
+									<small class="font-weight-light text-info">Only .jpg and .png files are allowed...</small>
 								</div>
-								<div class="mt-2">
-									<a href="/remove_dp" class="btn btn-danger float-left">
-										Remove Profile Picture
-									</a>
-									{{ form.submit(class='btn btn-success float-right')}}
+								<div class="mt-2 row">
+									<div class="col-6">
+										<a href="/remove_dp" class="btn btn-danger float-left">
+											Remove Profile Picture
+										</a>
+									</div>
+									<div class="col-6">
+										{{ form.submit(class='btn btn-success float-right')}}
+									</div>
+								</div>
+
+								<div class="row mt-2">
+									<div class="col-12">
+										<a href="/my_account" class="btn btn-outline-info float-left">BACK</a>
+									</div>
 								</div>
 							</div>
 						</fieldset>

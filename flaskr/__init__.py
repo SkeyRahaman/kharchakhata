@@ -5,7 +5,10 @@ from flask_bcrypt import Bcrypt
 from oauthlib.oauth2 import WebApplicationClient
 
 app = Flask(__name__)
-app.config.from_object('config.Config')
+try:
+    app.config.from_object('config.Config')
+except:
+    pass
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
