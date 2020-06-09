@@ -14,6 +14,7 @@ class Config:
     # SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:@127.0.0.1/testing2'
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    TIMEOUT = 180
 
     # Google Login
     GOOGLE_CLIENT_ID = "1054655630563-eo9jbir0n130tup85vgros8srrof15jc.apps.googleusercontent.com"
