@@ -74,10 +74,14 @@
 				{{ form.hidden_tag() }}
 				<fieldset class="form-group">
 					<legend class="border-bottom mb-4">
-						Add Expence
+						Add Expence<br>
+						<small class="font-weight-light text-danger">*Required!</small>
 					</legend>
+
+
 					<div class="form-group">
 						<strong>{{ form.name.label(class="form-control-label")}}</strong>
+						<span class="text-danger">*</span>
 						{% if form.name.errors %}
 							{{ form.name(class="form-control form-control-lg is-invalid")}}
 							<div>
@@ -92,6 +96,7 @@
 					</div>
 					<div class="form-group">
 						<strong>{{ form.date.label(class="form-control-label")}}</strong>
+						<span class="text-danger">*</span>
 						<div class="form-check">
 							{{ form.today(class="form-check-input date_check")}}
 							{{ form.today.label(class="form-control-label")}}
@@ -109,6 +114,7 @@
 					</div>
 					<div class="form-group">
 						<strong>{{ form.time.label(class="form-control-label")}}</strong>
+						<span class="text-danger">*</span>
 						<div class="form-check">
 							{{ form.now(class="form-check-input time_check")}}
 							{{ form.now.label(class="form-control-label")}}
@@ -195,6 +201,7 @@
 					</div>
 					<div class="form-group">
 						<strong>{{ form.amount.label(class="form-control-label")}}</strong>
+						<span class="text-danger">*</span>
 						{% if form.amount.errors %}
 							{{ form.amount(class="form-control form-control-lg is-invalid")}}
 							<div>
