@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12 col-lg-7"> 
+		<div class="login container m-5 pr-5 bg-light card m-auto">
+			
+			<div class="row p-3">
+				<div class="container center_left col-12">
+					<form method="POST" enctype=multipart/form-data action="">
+						{{ form.hidden_tag() }}
+						<fieldset class="form-group">
+							<legend class="border-bottom mb-4">
+								Profile Picture
+							</legend>
+							<div class="text-center">
+								{% if current_user.picture %}
+									<img id="profile_picture" src="{{current_user.picture}}" alt="..." class="img-thumbnail" width="250">
+								{% else %}
+									<img id="profile_picture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="..." class="img-thumbnail"  height="200" width="200">
+								{% endif %}
+							</div>
+							<div>
+								<div class="custom-file">
+										{% if form.dp.errors %}
+											{{ form.dp(class="custom-file-input is-invalid", id="inputGroupFile04")}}
+										{% else %}
+											{{ form.dp(class="custom-file-input", id="inputGroupFile04")}}
+										{% endif %}
+									    <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+									</div>
+									<div>
+										{% for error in form.dp.errors %}
+											<span>{{ error }}</span>
+										{% endfor %}
+									</div>
+								</div>
+								<div class="mt-2">
+									<a href="/remove_dp" class="btn btn-danger float-left">
+										Remove Profile Picture
+									</a>
+									{{ form.submit(class='btn btn-success float-right')}}
+								</div>
+							</div>
+						</fieldset>
+					</form>					
+				</div>
+			</div>
+		</div>
+</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+	document.getElementById('inputGroupFile04').onchange = function (evt) {
+	    var tgt = evt.target || window.event.srcElement,
+	        files = tgt.files;
+
+	    // FileReader support
+	    if (FileReader && files && files.length) {
+	        var fr = new FileReader();
+	        fr.onload = function () {
+	            document.getElementById("profile_picture").src = fr.result;
+	        }
+	        fr.readAsDataURL(files[0]);
+	    }
+	}
+</script>
+{% endblock %}

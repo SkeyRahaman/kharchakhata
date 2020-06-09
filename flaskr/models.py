@@ -9,7 +9,7 @@ def load_user(id):
 
 class Sex(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    type = db.Column(db.String(10), unique=True, nullable=False)
+    type = db.Column(db.String(20), unique=True, nullable=False)
     user = db.relationship('Users', backref='sex', lazy=True)
     admin = db.relationship('Admin', backref='sex', lazy=True)
 
@@ -51,8 +51,9 @@ class Users(db.Model, UserMixin):
     fname = db.Column(db.String(15), nullable=False)
     mname = db.Column(db.String(15))
     lname = db.Column(db.String(15))
+    picture = db.Column(db.String(100))
     dob = db.Column(db.Date)
-    email = db.Column(db.String(30), unique=True, nullable=False)
+    email = db.Column(db.String(50), unique=True, nullable=False)
     email_conformation = db.Column(db.Integer, nullable=False, default=0)
     phone = db.Column(db.String(15))
     password = db.Column(db.String(60), nullable=False)
@@ -67,10 +68,12 @@ class Users(db.Model, UserMixin):
                  fname, email, password,
                  mname=None, lname=None,
                  dob=None, phone=None,
-                 sex=1, email_conformation=0):
+                 sex=1, email_conformation=0,
+                 picture=None):
         self.fname = fname
         self.mname = mname
         self.lname = lname
+        self.picture = picture
         self.dob = dob
         self.email = email
         self.phone = phone
@@ -146,8 +149,9 @@ class Admin(db.Model, UserMixin):
     fname = db.Column(db.String(15), nullable=False)
     mname = db.Column(db.String(15))
     lname = db.Column(db.String(15))
+    picture = db.Column(db.String(100))
     dob = db.Column(db.Date)
-    email = db.Column(db.String(30), unique=True, nullable=False)
+    email = db.Column(db.String(60), unique=True, nullable=False)
     email_conformation = db.Column(db.Integer, nullable=False, default=0)
     phone = db.Column(db.String(15))
     password = db.Column(db.String(60), nullable=False)

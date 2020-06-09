@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms_components import TimeField
 from wtforms import StringField, PasswordField, SelectField, SubmitField, BooleanField, FloatField, TextAreaField, \
-    IntegerField
+    IntegerField, FileField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flask_wtf.file import FileAllowed, FileRequired
 from flaskr.models import Users, Sex
 from flask import flash
 
@@ -20,7 +21,8 @@ class Expence_form(FlaskForm):
     payment_method = SelectField("Payment Method", choices=[], validate_choice=False)
     transaction_type = SelectField("Transaction Type", choices=[("1", "Debit"), ("2", "Credit")])
     amount = FloatField("Amount")
-    comment = TextAreaField('Comment', render_kw={"rows": 5, "cols": 11, "placeholder": "Under 90 character"}, validators=[Length(max=95)])
+    comment = TextAreaField('Comment', render_kw={"rows": 5, "cols": 11, "placeholder": "Under 90 character"},
+                            validators=[Length(max=95)])
 
     submit = SubmitField("Save")
 
@@ -55,6 +57,15 @@ class Creat_new_password(FlaskForm):
     submit = SubmitField('Sign Up')
 
 
+class Profile_picture_form(FlaskForm):
+    dp = FileField('profile picture',
+                   validators=[
+                       FileRequired(),
+                       FileAllowed(['jpg', 'png'], 'Images only!')
+                   ])
+    submit = SubmitField("Change!")
+
+
 class Edit_profile_form(FlaskForm):
     fname = StringField('First Name',
                         validators=[
@@ -69,7 +80,7 @@ class Edit_profile_form(FlaskForm):
                         ])
     sex = SelectField("Gender", choices=[(str(sex.id), sex.type) for sex in Sex.query.all()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    dob = DateField("Date of Birth", validators=[DataRequired()])
+    dob = DateField("Date of Birth")
     phone = StringField("Phone Number (Along with country code).", validators=[Length(max=14)])
     submit = SubmitField('Sign Up')
     current_email = None
@@ -98,7 +109,7 @@ class RegistrationForm(FlaskForm):
                         ])
     sex = SelectField("Gender", choices=[(str(sex.id), sex.type) for sex in Sex.query.all()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    dob = DateField("Date of Birth", validators=[DataRequired()])
+    dob = DateField("Date of Birth")
     phone = StringField("Phone Number (Along with country code).", validators=[Length(max=14)])
     password = PasswordField('Password',
                              validators=[DataRequired(), Length(min=6, max=20)])

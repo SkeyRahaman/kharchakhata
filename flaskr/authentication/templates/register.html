@@ -8,10 +8,12 @@
 				{{ form.hidden_tag() }}
 				<fieldset class="form-group">
 					<legend class="border-bottom mb-4">
-						Register Now
+						Register Now<br>
+						<small class="font-weight-light text-danger">*Required!</small>
 					</legend>
 					<div class="form-group">
 						{{ form.fname.label(class="form-control-label")}}
+						<span class="text-danger">*</span>
 						{% if form.fname.errors %}
 							{{ form.fname(class="form-control form-control-lg is-invalid")}}
 							<div>
@@ -51,6 +53,7 @@
 					</div>
 					<div class="form-group">
 						{{ form.email.label(class="form-control-label")}}
+						<span class="text-danger">*</span>
 						{% if form.email.errors %}
 							{{ form.email(class="form-control form-control-lg is-invalid")}}
 							<div>
@@ -105,6 +108,7 @@
 					</div>
 					<div class="form-group">
 						{{ form.password.label(class="form-control-label")}}
+						<span class="text-danger">*</span>
 						{% if form.password.errors %}
 							{{ form.password(class="form-control form-control-lg is-invalid")}}
 							<div>
@@ -119,6 +123,7 @@
 					</div>
 					<div class="form-group">
 						{{ form.cpassword.label(class="form-control-label")}}
+						<span class="text-danger">*</span>
 						{% if form.cpassword.errors %}
 							{{ form.cpassword(class="form-control form-control-lg is-invalid")}}
 							<div>

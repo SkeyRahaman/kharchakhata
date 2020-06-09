@@ -2,7 +2,6 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from string import Template
-import config
 from flask import session
 from flask_login import current_user
 from itsdangerous import URLSafeTimedSerializer, URLSafeSerializer

@@ -3,9 +3,10 @@ from flaskr import app, db, bcrypt, client
 from flaskr.functions import *
 from flaskr.models import Users, Sex
 from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form, \
-    Creat_new_password, Reset_password, Edit_profile_form
+    Creat_new_password, Reset_password, Edit_profile_form, Profile_picture_form
 from flask_login import login_user, logout_user, login_required, current_user
 from itsdangerous import URLSafeTimedSerializer, URLSafeSerializer
+import boto3
 import json
 import requests
 
@@ -69,6 +70,9 @@ def callback_google():
     # You want to make sure their email is verified.
     # The user authenticated with Google, authorized your
     # app, and now you've verified their email through Google!
+    for i in range(10):
+        print("****************")
+    print(userinfo_response.json())
     if userinfo_response.json().get("email_verified"):
 
         try:
@@ -78,6 +82,17 @@ def callback_google():
         b = Users.query.filter_by(email=email).first()
         if b:
             flash("Loged in as " + b.fname, "success")
+            try:
+                b.picture = userinfo_response.json()["picture"]
+            except:
+                pass
+            if b.email_conformation == 0:
+                try:
+                    if userinfo_response.json()["email_verified"]:
+                        b.email_conformation = 1
+                except:
+                    pass
+            db.session.commit()
             login_user(b, remember=False)
         else:
 
@@ -97,9 +112,14 @@ def callback_google():
                     email_verified = 0
             except:
                 email_verified = 0
+            try:
+                picture = userinfo_response.json()["picture"]
+            except:
+                picture = None
             new_user = Users(
                 fname=fname.title(),
                 lname=lname.title(),
+                picture=picture,
                 email=email.lower(),
                 email_conformation=email_verified,
                 sex=4,
@@ -127,16 +147,6 @@ def callback_google():
     else:
         return "User email not available or not verified by Google.", 400
 
-    return redirect("/")
-
-
-@app.route("/facebook_login")
-def login_facebook():
-    return redirect("/")
-
-
-@app.route("/facebook_login/callback")
-def callback_facebook():
     return redirect("/")
 
 
@@ -186,6 +196,8 @@ def registration_form():
             "A conformation Email is been send to your email address. Please verify your email address to use reset password functions.",
             "info")
         return redirect("/")
+    form.sex.default = 4
+    form.process()
     return render_template("register.html", title="Register", form=form)
 
 
@@ -257,6 +269,41 @@ def my_account():
     return render_template('my_account.html',
                            title="My Account",
                            form=form)
+
+
+@bp.route('/change_dp', methods=['post', 'get'])
+@login_required
+def change_dp():
+    form = Profile_picture_form()
+    if request.method == 'POST' and form.validate_on_submit():
+        s3 = boto3.resource('s3',
+                            aws_access_key_id=app.config["ACCESS_ID"],
+                            aws_secret_access_key=app.config["ACCESS_KEY"]
+                            )
+        key = "dp_" + str(current_user.id) + "." + request.files["dp"].filename.split(".")[-1]
+        try:
+            s3.Bucket("kharchakhata-files").put_object(Key=key, Body=request.files["dp"], ACL='public-read')
+            user = Users.query.filter_by(email=current_user.email).first()
+            user.picture = "https://s3-{}.amazonaws.com/{}/{}".format(
+                app.config["S3_REGION"],
+                app.config['S3_BUCKET_NAME'],
+                key
+            )
+            db.session.commit()
+            flash("Profile picture updated..", "success")
+        except:
+            flash("Cannot uplode file!.. Try after some time.!.", "danger")
+
+    return render_template("profile_picture.html", form=form)
+
+
+@bp.route('/remove_dp')
+@login_required
+def remove_dp():
+    user = Users.query.filter_by(email=current_user.email).first()
+    user.picture = None
+    db.session.commit()
+    return redirect("/change_dp")
 
 
 @bp.route('/my_account/send_mail', methods=['post', 'get'])

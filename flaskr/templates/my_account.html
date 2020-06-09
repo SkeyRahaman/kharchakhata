@@ -8,8 +8,14 @@
 	<div class="details">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-sm-12 col-md-3 col-lg-3">
-					<img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="..." class="img-thumbnail">
+				<div class="col-sm-12 col-md-3 col-lg-3 text-center">
+					{% if current_user.picture %}
+						<img src="{{current_user.picture}}" alt="..." class="img-thumbnail" width="300">
+					{% else %}
+						<img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="..." class="img-thumbnail">
+					{% endif %}
+					<br>
+					<a href="/change_dp"><button class="btn btn-outline-secondary mt-2">Change Profile Picture</button></a>
 				</div>
 				<div class="col-sm-12 col-md-9 col-lg-9">
 					<form name="profile_form" method="post" action="" >
@@ -40,7 +46,11 @@
 										{% endfor %}
 									</div>
 								{% else %}
-									{{ form.mname(class="form-control form-control-lg", value=current_user.mname) }}
+									{% if current_user.mname == None %}
+										{{ form.mname(class="form-control form-control-lg") }}
+									{% else %}
+										{{ form.mname(class="form-control form-control-lg", value=current_user.mname) }}
+									{% endif %}
 								{% endif %}
 							</div>
 
@@ -54,7 +64,11 @@
 										{% endfor %}
 									</div>
 								{% else %}
-									{{ form.lname(class="form-control form-control-lg", value=current_user.lname) }}
+									{% if current_user.lname == None %}
+										{{ form.lname(class="form-control form-control-lg") }}
+									{% else %}
+										{{ form.lname(class="form-control form-control-lg", value=current_user.lname) }}
+									{% endif %}
 								{% endif %}
 							</div>
 
@@ -97,7 +111,11 @@
 										{% endfor %}
 									</div>
 								{% else %}
-									{{ form.phone(class="form-control form-control-lg", value=current_user.phone) }}
+									{% if current_user.phone == None %}
+										{{ form.phone(class="form-control form-control-lg") }}
+									{% else %}
+										{{ form.phone(class="form-control form-control-lg", value=current_user.phone) }}
+									{% endif %}
 								{% endif %}
 							</div>
 						
