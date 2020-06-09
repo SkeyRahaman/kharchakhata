@@ -520,27 +520,21 @@ def savings_month_wise_bar_graph():
 def get_user_name():
     if current_user and current_user.is_authenticated:
         return [
-            html.A(href="/my_account", children='Hi! ' + str(current_user.fname))
+            html.A(href="/my_account",
+                   children='Hi! ' + str(current_user.fname))
         ]
     else:
         return [
             html.Div(className="row", children=[
-                html.A(href="/", children=[
-                    html.Button(className="btn text-danger", children=[
-                        html.Strong("Login")
-                    ])
+                    html.Strong("Login")
                 ]),
-                html.A(href="/registration_form", children=[
-                    html.Button(className="btn text-danger", children=[
-                        html.Strong("Sign Up")
-                    ])
+                html.A(className="text-danger", href="/registration_form", children=[
+                    html.Strong("Sign Up")
                 ]),
-                html.A(href="/about", children=[
-                    html.Button(className="btn text-danger", children=[
-                        html.Strong("About")
-                    ])
+                html.A(className="text-danger", href="/about", children=[
+                    html.Strong("About")
                 ]),
-            ])]
+            ]
 
 
 def get_months():

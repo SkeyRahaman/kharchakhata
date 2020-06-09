@@ -7,9 +7,9 @@
 {% block content %}
 	<div class="container-fluid">
 		<div class="row">
-			<div class="settings_nav col-sm-2 col-xs-12 col-md-2 col-lg-2">
+<!-- 			<div class="settings_nav col-sm-2 col-xs-12 col-md-2 col-lg-2">
 				<button type="button" class="btn btn-light ">Reset password</button>
-			</div>
+			</div> -->
 			<div class="settings_feild col-sm-10 col-xs-12 col-md-10 col-lg-10">
 				<div class="settings_feild_elements bg-light" id="reset_password_div">
 					<form method="POST" action="">
@@ -63,8 +63,8 @@
 							</div>
 						</fieldset>
 						<div class="form-group">
-							<div class="row">
-								<div class="col-6">
+							<div>
+								<div>
 									{{ form_password.submit(class='btn btn-success float-right')}}
 								</div>
 							</div>

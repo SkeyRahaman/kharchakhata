@@ -40,17 +40,22 @@
 			.heading #name_app{
 				text-align: right;
 			}
-			body {
-				padding-bottom: 5%;
-				margin-bottom: 5%;
-			}
+			@media (max-width:700px){
+		        .heading {
+		            font-size: 25px;
+		        }
+		        .heading .heading_side{
+		        	font-size: 15px;
+		        }
+
+		    }
 		</style>
 </head>
 <body>
 	<nav class="navbar heading">
 	    <strong id="name_app"><a href="/">KHARCHAKHATA</a></strong>
 	    {% if current_user.is_authenticated %}
-	    	<strong id="my_account">
+	    	<strong class="heading_side" id="my_account">
 	    		<a href="/my_account">
 	    			Hi! {{ current_user.fname }}
 			    	{% if current_user.picture %}
@@ -59,18 +64,18 @@
 				</a>
 			</strong>
 	    {% else %}
-	    	<div>
+	    	<div class="heading_side">
 	    		<div class="row">
-	    				<a href="{{ url_for('home')}}">
-	    					<button class="btn text-danger"><strong>Login</strong></button>
+	    				<a href="{{ url_for('home')}}" class="text-danger">
+	    					<strong>Login</strong>
 	    				</a>
 	    			
-	    				<a class="mx-auto" href="{{url_for('auth.registration_form')}}">
-	    					<button class="btn text-danger"><strong>Sign Up</strong></button>
+	    				<a class="mx-2 text-danger" href="{{url_for('auth.registration_form')}}">
+	    					<strong>Sign Up</strong>
 	    				</a>
 	    			
-	    				<a href="{{url_for('about')}}">
-	    					<button class="btn text-danger"><strong>About</strong></button>
+	    				<a href="{{url_for('about')}}" class="text-danger">
+	    					<strong>About</strong>
 	    				</a>
 	    		</div>
 	    	</div>

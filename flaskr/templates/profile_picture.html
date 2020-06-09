@@ -1,6 +1,14 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<style type="text/css">
+	@media (max-width:700px){
+		        .profile_picture_div {
+		            width: 50;
+		        }
+
+		    }
+</style>
 <div class="row">
 	<div class="col-md-12 col-lg-7"> 
 		<div class="login container m-5 pr-5 bg-light card m-auto">
@@ -13,11 +21,11 @@
 							<legend class="border-bottom mb-4">
 								Profile Picture
 							</legend>
-							<div class="text-center">
+							<div class="text-center profile_picture_div">
 								{% if current_user.picture %}
 									<img id="profile_picture" src="{{current_user.picture}}" alt="..." class="img-thumbnail" width="250">
 								{% else %}
-									<img id="profile_picture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="..." class="img-thumbnail"  height="200" width="200">
+									<img id="profile_picture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="..." class="img-thumbnail" width="200">
 								{% endif %}
 							</div>
 							<div>

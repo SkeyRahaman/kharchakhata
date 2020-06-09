@@ -50,7 +50,7 @@ def create_dashboard(server=app):
             html.Strong(id='name_app', children=[
                 html.A(href="/dashboard/all/all", children='KHARCHAKHATA')
             ]),
-            html.Strong(id='my_account', children=[
+            html.Strong(className="heading_side", id='my_account', children=[
                 html.A(href="/my_account", children='Loading...')
             ])
         ]),
