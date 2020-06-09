@@ -70,8 +70,8 @@ def error_500(error):
                     <p>If not, Please check after some time. Or go back...</p>
                 </div>
             </div>
-            <div class="text-center">
-                <button class="btn btn-outline-success" onclick="history.back();">BACK</button>
+            <div class="text-center mt-2">
+                <button class="btn btn-lg btn-outline-success" onclick="history.back();">BACK</button>
             </div>
         
             <div class="footer text-center">
@@ -82,7 +82,7 @@ def error_500(error):
                 </a>
             </div>
             <script type="text/javascript">
-                setTimeout(function(){location.reload()}, 1000);
+                setTimeout(function(){location.reload()}, 500);
                 if (window.screen.height <= document.body.clientHeight){
                     document.getElementsByClassName("footer")[0].style.position = "relative";
                 } else {
