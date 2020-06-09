@@ -5,10 +5,11 @@ from flask_bcrypt import Bcrypt
 from oauthlib.oauth2 import WebApplicationClient
 
 app = Flask(__name__)
+
 try:
-    app.config.from_object('config.Config')
+    app.config.from_object('config_local.Config')
 except:
-    pass
+    app.config.from_object('config.Config')
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -31,3 +32,6 @@ with app.app_context():
     from flaskr.dashboard_dash.dashboard import create_dashboard
 
     app = create_dashboard(app)
+
+
+
