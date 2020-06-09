@@ -1,3 +1,5 @@
+from http.client import HTTPException
+
 from flask import Blueprint, render_template, redirect
 import itsdangerous.exc
 import sqlalchemy.exc
@@ -44,4 +46,9 @@ def error_db(error):
 
 @errors.app_errorhandler(mysql.connector.errors.OperationalError)
 def error_db(error):
+    return render_template("error_db_connection.html"), 500
+
+
+@errors.errorhandler(HTTPException)
+def http_error_handler(error):
     return render_template("error_db_connection.html"), 500
