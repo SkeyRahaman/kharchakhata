@@ -467,7 +467,7 @@ def expenditure_income_line_graph(month="May", year=2020):
             go.Scatter(
                 x=date_31,
                 y=data_vs_expence_commutative[2:],
-                name="Data vs Expence Commutative",
+                name="Data vs Expense Commutative",
                 mode="markers+lines"
             ),
         ]
