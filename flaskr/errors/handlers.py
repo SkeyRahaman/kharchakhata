@@ -82,7 +82,7 @@ def error_500(error):
                 </a>
             </div>
             <script type="text/javascript">
-                setTimeout(function(){location.reload()}, 500);
+                setTimeout(function(){location.reload()}, 3000);
                 if (window.screen.height <= document.body.clientHeight){
                     document.getElementsByClassName("footer")[0].style.position = "relative";
                 } else {
