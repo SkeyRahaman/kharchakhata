@@ -145,21 +145,24 @@ def callback_google():
 
 @bp.route("/login", methods=["get", 'post'])
 def login():
-    form = Login_form()
-    if form.validate_on_submit():
-        password = request.form.get('password')
-        user = Users.query.filter_by(email=request.form.get('email').lower()).first()
-        if user:
-            if user.password == "External Website Verified.":
-                flash("You have registered through google authentication. Please login with google.", "info")
+    if not current_user.is_authenticated:
+        form = Login_form()
+        if form.validate_on_submit():
+            password = request.form.get('password')
+            user = Users.query.filter_by(email=request.form.get('email').lower()).first()
+            if user:
+                if user.password == "External Website Verified.":
+                    flash("You have registered through google authentication. Please login with google.", "info")
+                else:
+                    if bcrypt.check_password_hash(user.password, password):
+                        login_user(user, remember=request.form.get("remember"))
             else:
-                if bcrypt.check_password_hash(user.password, password):
-                    login_user(user, remember=request.form.get("remember"))
+                flash("Email address and password does not match!.", "info")
+            return redirect("/")
         else:
-            flash("Email address and password does not match!.", "info")
-        return redirect("/")
+            return render_template("login.html", title="Login", form=form)
     else:
-        return render_template("login.html", title="Login", form=form)
+        return redirect("/")
 
 
 @bp.route('/registration_form', methods=['GET', 'POST'])

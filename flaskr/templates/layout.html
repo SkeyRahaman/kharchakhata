@@ -21,6 +21,9 @@
 				margin-bottom: 10px;
 				font-size: 40px;
 			}
+			.heading .heading_side{
+	        	font-size: 25px;
+	        }
 			.heading a{
 				color: #DC004B;
 			}
@@ -39,6 +42,9 @@
 			}
 			.heading #name_app{
 				text-align: right;
+			}
+			.small_pic{
+				border-radius: 30px;
 			}
 			@media (max-width:700px){
 		        .heading {
@@ -59,7 +65,7 @@
 	    		<a href="/my_account">
 	    			Hi! {{ current_user.fname }}
 			    	{% if current_user.picture %}
-						<img src="{{current_user.picture}}" alt="Profile Picture" class="img-thumbnail" width="50">
+						<img src="{{current_user.picture}}" alt="Profile Picture" class="img-thumbnail small_pic" width="50">
 					{% endif %}
 				</a>
 			</strong>

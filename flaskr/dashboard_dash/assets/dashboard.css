@@ -55,5 +55,9 @@
     .heading .heading_side{
     	font-size: 15px;
     }
+    .min_width{
+    	min-width: 600px;
+    	overflow: auto;
+    }
 
 }

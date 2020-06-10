@@ -9,7 +9,7 @@ def load_user(id):
 
 class Sex(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    type = db.Column(db.String(20), unique=True, nullable=False)
+    type = db.Column(db.String(25), unique=True, nullable=False)
     user = db.relationship('Users', backref='sex', lazy=True)
     admin = db.relationship('Admin', backref='sex', lazy=True)
 
@@ -84,7 +84,7 @@ class Users(db.Model, UserMixin):
 
 class Frequency(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(15), nullable=False, unique=True)
+    name = db.Column(db.String(25), nullable=False, unique=True)
     expence_id = db.relationship('Expences', backref='frequency', lazy=True)
 
     def __repr__(self):
@@ -96,7 +96,7 @@ class Frequency(db.Model):
 
 class Payment_medium(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(15), nullable=False, unique=True)
+    name = db.Column(db.String(25), nullable=False, unique=True)
     expence_id = db.relationship('Expences', backref='payment_medium', lazy=True)
 
     def __repr__(self):
@@ -122,7 +122,7 @@ class Type_subtype(db.Model):
 
 class Type(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(15), nullable=False, unique=True)
+    name = db.Column(db.String(25), nullable=False, unique=True)
     type_subtype_id = db.relationship('Type_subtype', backref='type', lazy=True)
 
     def __repr__(self):
@@ -134,7 +134,7 @@ class Type(db.Model):
 
 class Sub_type(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(15), nullable=False, unique=True)
+    name = db.Column(db.String(25), nullable=False, unique=True)
     type_subtype_id = db.relationship('Type_subtype', backref='subtype', lazy=True)
 
     def __repr__(self):
