@@ -23,9 +23,12 @@ client = WebApplicationClient(app.config["GOOGLE_CLIENT_ID"])
 with app.app_context():
     from flaskr.authentication import auth
     from flaskr.errors.handlers import errors
+    from flaskr.api import api_authentication, api_route
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(errors)
+    app.register_blueprint(api_route.bp)
+    app.register_blueprint(api_authentication.bp)
 
     from flaskr.route import *
 
