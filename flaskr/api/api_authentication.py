@@ -30,7 +30,7 @@ def token_required(f):
             return f(current_user, *args, **kwargs)
         except Exception as e:
             print(e)
-            return jsonify({"message": "invalid token "})
+            return jsonify({"message": "invalid token " + str(e)})
     return decorated
 
 
