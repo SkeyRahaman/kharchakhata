@@ -29,8 +29,8 @@ def token_required(f):
             current_user = Users.query.filter_by(id=int(data['id'])).first()
             return f(current_user, *args, **kwargs)
         except Exception as e:
-            print(e)
-            return jsonify({"message": "invalid token " + str(e)})
+            print(str(e))
+            return jsonify({"message": "invalid token"})
     return decorated
 
 
@@ -177,7 +177,6 @@ def get_user(current_user):
     try:
         dob = current_user.dob.strftime("%d/%m/%Y")
     except Exception as e:
-        print("Error in api authentication get user function:-  " + e)
         dob = None
     return jsonify({
         "fname": current_user.fname,
@@ -185,7 +184,7 @@ def get_user(current_user):
         "lname": current_user.lname,
         "picture": current_user.picture,
         "email": current_user.email,
-        "dob": dob,
+        "dob": str(dob),
         "email_conformation": current_user.email_conformation,
         "phone": current_user.phone,
         "sex_id": current_user.sex_id
