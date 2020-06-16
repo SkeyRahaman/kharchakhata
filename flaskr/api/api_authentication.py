@@ -7,6 +7,7 @@ from flaskr.models import Users
 from flaskr.functions import *
 from flaskr import db, bcrypt, app
 from datetime import datetime
+from functools import wraps
 import jwt
 
 bp = Blueprint('api_auth', __name__,
@@ -15,11 +16,29 @@ s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 email_link = URLSafeSerializer(app.config['SECRET_KEY'])
 
 
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if "token" in request.headers:
+            token = request.headers['token']
+        else:
+            return jsonify({"message": "token missing"})
+        try:
+            data = jwt.decode(token,
+                              app.config['SECRET_KEY'])
+            current_user = Users.query.filter_by(id=data['id']).first()
+            return f(current_user, *args, **kwargs)
+        except Exception as e:
+            print(e)
+            return jsonify({"message": "invalid token"})
+    return decorated
+
+
 @bp.route('/login/<email>/<password>', methods=['POST'])
 def login_and_get_token(email, password):
     user = Users.query.filter_by(email=email).first()
     if user and bcrypt.check_password_hash(user.password, password):
-        return jsonify({"token": jwt.encode({"user_id": user.id}, app.config["SECRET_KEY"]).decode("utf-8")})
+        return jsonify({"token": jwt.encode({"id": user.id}, app.config["SECRET_KEY"]).decode("utf-8")})
     return make_response("invalid email and password.", 401, {'nothing': 'nothing'})
 
 
@@ -152,8 +171,8 @@ def send_password_reset_email_for(email):
 
 
 @bp.route('/get_user')
-def get_user():
-    current_user = Users.query.filter_by(id=1).first()
+@token_required
+def get_user(current_user):
     return jsonify({
         "fname": current_user.fname,
         "mname": current_user.mname,
