@@ -24,13 +24,13 @@ def token_required(f):
         else:
             return jsonify({"message": "token missing"})
         try:
-            data = jwt.decode(token,
-                              app.config['SECRET_KEY'])
-            current_user = Users.query.filter_by(id=data['id']).first()
+            data = jwt.decode(token.encode('utf-8'),
+                              app.config["SECRET_KEY"])
+            current_user = Users.query.filter_by(id=int(data['id'])).first()
             return f(current_user, *args, **kwargs)
         except Exception as e:
             print(e)
-            return jsonify({"message": "invalid token" + str(e)})
+            return jsonify({"message": "invalid token "})
     return decorated
 
 
@@ -38,13 +38,14 @@ def token_required(f):
 def login_and_get_token(email, password):
     user = Users.query.filter_by(email=email).first()
     if user and bcrypt.check_password_hash(user.password, password):
-        return jsonify({"token": jwt.encode({"id": user.id}, app.config["SECRET_KEY"]).decode("utf-8")})
+        print(app.config["SECRET_KEY"], type(app.config["SECRET_KEY"]))
+        return jsonify({"token": jwt.encode({"id": user.id}, app.config["SECRET_KEY"]).decode('utf-8')})
     return make_response("invalid email and password.", 401, {'nothing': 'nothing'})
 
 
 @bp.route('/edit_user', methods=['POST'])
-def edit_user():
-    current_user = Users.query.filter_by(id=5).first()
+@token_required
+def edit_user(current_user):
     data = request.get_json()
     if data:
         if "fname" in data and len(data["fname"]) > 0:
@@ -187,8 +188,8 @@ def get_user(current_user):
 
 
 @bp.route('/remove_dp')
-def remove_dp():
-    current_user = Users.query.filter_by(id=1).first()
+@token_required
+def remove_dp(current_user):
     user = Users.query.filter_by(email=current_user.email).first()
     user.picture = None
     db.session.commit()
@@ -196,8 +197,8 @@ def remove_dp():
 
 
 @bp.route('/send_conformation_mail_after_login')
-def send_conformation_mail_after_login():
-    current_user = Users.query.filter_by(id=1).first()
+@token_required
+def send_conformation_mail_after_login(current_user):
     token = email_link.dumps(current_user.email, salt="this_is_the_email")
     conform_url = "https://" + str(request.host) + "/conform_email/" + str(token)
     try:
@@ -209,11 +210,12 @@ def send_conformation_mail_after_login():
 
 @bp.route('/send_conformation_mail_before_login/<email>')
 def send_conformation_mail_before_login(email):
+    current_user = Users.query.filter_by(email=email).first()
     token = email_link.dumps(email, salt="this_is_the_email")
     conform_url = "https://" + str(request.host) + "/conform_email/" + str(token)
     try:
         print(conform_url)
-        # send_welcome_email(email=current_user.email, fname=current_user.fname, conform_url=conform_url)
+        send_welcome_email(email=current_user.email, fname=current_user.fname, conform_url=conform_url)
         return jsonify({"message": "email send.!"})
     except:
         return jsonify({"message": "email connection error"})

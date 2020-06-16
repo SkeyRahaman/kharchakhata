@@ -8,7 +8,8 @@ app = Flask(__name__)
 
 try:
     app.config.from_object('config_local.Config')
-except:
+except Exception as e:
+    print("we are configuring the Server side configaration.",e)
     app.config.from_object('config.Config')
 
 db = SQLAlchemy(app)
