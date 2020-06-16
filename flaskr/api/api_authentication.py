@@ -174,13 +174,18 @@ def send_password_reset_email_for(email):
 @bp.route('/get_user')
 @token_required
 def get_user(current_user):
+    try:
+        dob = current_user.dob.strftime("%d/%m/%Y")
+    except Exception as e:
+        print("Error in api authentication get user function:-  " + e)
+        dob = None
     return jsonify({
         "fname": current_user.fname,
         "mname": current_user.mname,
         "lname": current_user.lname,
         "picture": current_user.picture,
         "email": current_user.email,
-        "dob": current_user.dob.strftime("%d/%m/%Y"),
+        "dob": dob,
         "email_conformation": current_user.email_conformation,
         "phone": current_user.phone,
         "sex_id": current_user.sex_id
