@@ -25,11 +25,13 @@ with app.app_context():
     from flaskr.authentication import auth
     from flaskr.errors.handlers import errors
     from flaskr.api import api_authentication, api_route
+    from flaskr.android import android_routes
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(errors)
     app.register_blueprint(api_route.bp)
     app.register_blueprint(api_authentication.bp)
+    app.register_blueprint(android_routes.bp)
 
     from flaskr.route import *
 

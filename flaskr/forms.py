@@ -5,7 +5,7 @@ from wtforms import StringField, PasswordField, SelectField, SubmitField, Boolea
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, optional
 from flask_wtf.file import FileAllowed, FileRequired
-from flaskr.models import Users, Sex
+from flaskr.models import Users, Sex, Android
 from flask import flash
 
 
@@ -134,3 +134,35 @@ class Login_form(FlaskForm):
         user = Users.query.filter_by(email=email.data).first()
         if not user:
             raise ValidationError("Email Address not registered!. You can Register as new User!.")
+
+
+class App_submit(FlaskForm):
+    app_name = StringField('Application Name.', validators=[DataRequired()], default="HI")
+    app_logo = FileField('Application icon.',
+                         validators=[
+                             FileRequired(),
+                             FileAllowed(['jpg', 'png'], 'Images only!')
+                         ])
+    app = FileField('Application file(.apk) ',
+                    validators=[
+                        FileRequired(),
+                        FileAllowed(['apk'], '.apk files only!')
+                    ])
+    dev_name = StringField('Developer name to be displayed with download link..')
+    intro1 = StringField("Developer's Introduction line 1(under 80 character)",
+                         validators=[DataRequired(), Length(max=79)])
+    intro2 = StringField("Developer's Introduction line 2(under 80 character)",
+                         validators=[DataRequired(), Length(max=79)])
+    dev_profile_url = StringField("Developer's and social profile url.!")
+    submit = SubmitField("Upload")
+
+
+class App_edit(FlaskForm):
+    app_name = StringField('Application Name.', validators=[DataRequired()])
+    dev_name = StringField('Developer name to be displayed with download link..')
+    intro1 = StringField("Developer's Introduction line 1(under 80 character)",
+                         validators=[DataRequired(), Length(max=79)])
+    intro2 = StringField("Developer's Introduction line 2(under 80 character)",
+                         validators=[DataRequired(), Length(max=79)])
+    dev_profile_url = StringField("Developer's and social profile url.!")
+    submit = SubmitField("Upload")

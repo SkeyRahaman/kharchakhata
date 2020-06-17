@@ -60,6 +60,7 @@ class Users(db.Model, UserMixin):
     sex_id = db.Column(db.Integer, db.ForeignKey("sex.id"), nullable=False)
     active = db.Column(db.Integer, default=1)
     expence_id = db.relationship('Expences', backref='user', lazy=True)
+    android_id = db.relationship('Android', backref='android', lazy=True)
 
     def __repr__(self):
         return f"Users('{self.fname}','{self.email}','{self.password}')"
@@ -175,3 +176,20 @@ class Admin(db.Model, UserMixin):
         self.phone = phone
         self.password = password
         self.sex = sex
+
+
+class Android(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    app_name = db.Column(db.String(40), nullable=False)
+    app_logo_url = db.Column(db.String(100))
+    dev_name = db.Column(db.String(60), nullable=False)
+    intro1 = db.Column(db.String(80), nullable=False)
+    intro2 = db.Column(db.String(80), nullable=False)
+    app_url = db.Column(db.String(100), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, unique=True)
+    dev_profile_url = db.Column(db.String(100), default="#")
+    date_time = db.Column(db.DateTime, nullable=False)
+    approved = db.Column(db.Integer, nullable=False, default=0)
+
+    def __repr__(self):
+        return '<Android name %r>' % self.app_name

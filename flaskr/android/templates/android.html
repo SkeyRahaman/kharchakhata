@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="card bg-light m-auto">
+	<div class="card-body text-center">
+		<h1>Android application is in development process!.</h1>
+		<h2>Comming Soon..</h2>
+		<p>Are you a Android developer?</p>
+		<p>Interested in development of our Android app?.</p>
+		<p>If yes.. You can ping me in sakibmondal7@gmail.com</p>
+		<button class="btn btn-outline-secondary btn-lg" type="button">Know more about our api.!</button>
+		<button class="btn btn-outline-secondary btn-lg" type="button">Submit Your Android application</button>
+	</div>
+</div>
+
+<style type="text/css">
+	.doenload_cont{
+		max-width: 70%;
+	}
+	.app_icon{
+		width: 180px;
+	}
+	@media (max-width:700px){
+        .doenload_cont{
+        	max-width: 95%;
+        }
+        .app_icon{
+			width: 130px;
+		}
+
+    }
+</style>
+<div class="text-center bg-light card m-2 p-2">
+	<h3><strong>Some Android Application under development.</strong></h3>
+	<div class="row">
+	{% for app in apps %}
+		<div class="col-md-6 col-sm-11 bg-light my-4 mx-auto doenload_cont card card-body">
+			<div class="row">
+				<div class="col-md-4 col-sm-12 text-center app_icon_con">
+					<img class="app_icon" src="{{app.app_logo_url}}" alt="icon">
+				</div>
+				<div class="col-md-8 col-sm-12">
+					<div class="row">
+
+						<div class="col-12 text-center">
+							<div>
+								<h4 class="text-left">Developed By:- </h4>
+								{% if current_user and current_user.id == app.user_id %}
+									<div class="text-right">
+										<button class="btn btn-sm btn-danger">Edit</button>
+									</div>
+								{% endif %}
+							</div>
+							<a href="{{app.dev_profile_url}}"><p><h5 class="underline">{{app.dev_name}}</h5></p></a>
+							<p>{{app.intro1}}</p>
+							<p>{{app.intro2}}</p>
+						</div>
+						<div class="col-12">
+							<a href="{{app.app_url}}"><button class="btn btn-block btn-lg btn-success">Download</button></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

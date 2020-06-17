@@ -31,16 +31,22 @@ def token_required(f):
         except Exception as e:
             print(str(e))
             return jsonify({"message": "invalid token"})
+
     return decorated
 
 
-@bp.route('/login/<email>/<password>', methods=['POST'])
-def login_and_get_token(email, password):
-    user = Users.query.filter_by(email=email).first()
-    if user and bcrypt.check_password_hash(user.password, password):
-        print(app.config["SECRET_KEY"], type(app.config["SECRET_KEY"]))
-        return jsonify({"token": jwt.encode({"id": user.id}, app.config["SECRET_KEY"]).decode('utf-8')})
-    return make_response("invalid email and password.", 401, {'nothing': 'nothing'})
+@bp.route('/login', methods=['POST'])
+def login_and_get_token():
+    data = request.get_json()
+    if data and "email" in data and "password" in data:
+        email = data['email']
+        password = data['password']
+        user = Users.query.filter_by(email=email).first()
+        if user and bcrypt.check_password_hash(user.password, password):
+            print(app.config["SECRET_KEY"], type(app.config["SECRET_KEY"]))
+            return jsonify({"token": jwt.encode({"id": user.id}, app.config["SECRET_KEY"]).decode('utf-8')})
+        return make_response("invalid email and password.", 401, {'nothing': 'nothing'})
+    return jsonify({'message': 'invalid body.!'})
 
 
 @bp.route('/edit_user', methods=['POST'])
