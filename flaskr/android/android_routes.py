@@ -17,9 +17,11 @@ def android():
                            apps=apps)
 
 
-@bp.route('/app_submit', methods=['POST'])
+@bp.route('/app_submit', methods=['GET', 'POST'])
 def add_app():
     form = App_submit()
+    if request.method == 'POST':
+        print(form.errors)
     return render_template('add_app.html',
                            form=form)
 
