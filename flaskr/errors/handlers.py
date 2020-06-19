@@ -16,6 +16,9 @@ def error_404(error):
 
 @errors.app_errorhandler(500)
 def error_500(error):
+
+    for i in range(10):
+        print(error)
     return """<!DOCTYPE html>
         <html>
         <head>
@@ -103,29 +106,41 @@ def error_500(error):
 
 @errors.app_errorhandler(sqlalchemy.exc.OperationalError)
 def error_db(error):
+    print(error)
+    print("sqlalchemy.exc.OperationalError")
     return render_template("error_db_connection.html"), 500
 
 
 @errors.app_errorhandler(sqlalchemy.exc.StatementError)
 def error_db(error):
+    print(error)
+    print("sqlalchemy.exc.OperationalError2")
     return render_template("error_db_connection.html"), 500
 
 
 @errors.app_errorhandler(sqlalchemy.exc.InterfaceError)
 def error_db(error):
+    print(error)
+    print("sqlalchemy.exc.OperationalError3")
     return render_template("error_db_connection.html"), 500
 
 
 @errors.app_errorhandler(sqlalchemy.exc.InvalidRequestError)
 def error_db(error):
+    print(error)
+    print("sqlalchemy.exc.OperationalError4")
     return render_template("error_db_connection.html"), 500
 
 
 @errors.app_errorhandler(mysql.connector.errors.OperationalError)
 def error_db(error):
+    print(error)
+    print("sqlalchemy.exc.OperationalError5")
     return render_template("error_db_connection.html"), 500
 
 
 @errors.errorhandler(HTTPException)
 def http_error_handler(error):
+    print(error)
+    print("sqlalchemy.exc.OperationalError6")
     return render_template("error_db_connection.html"), 500

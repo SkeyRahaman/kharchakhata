@@ -137,7 +137,7 @@ class Login_form(FlaskForm):
 
 
 class App_submit(FlaskForm):
-    app_name = StringField('Application Name.', validators=[DataRequired()], default="HI")
+    app_name = StringField('Application Name.', validators=[DataRequired()])
     app_logo = FileField('Application icon.',
                          validators=[
                              FileRequired(),

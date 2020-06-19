@@ -9,7 +9,7 @@
 		<p>Interested in development of our Android app?.</p>
 		<p>If yes.. You can ping me in sakibmondal7@gmail.com</p>
 		<button class="btn btn-outline-secondary btn-lg" type="button">Know more about our api.!</button>
-		<button class="btn btn-outline-secondary btn-lg" type="button">Submit Your Android application</button>
+		<a href="/android/app_submit"><button class="btn btn-outline-secondary btn-lg" type="button">Submit Your Android application</button></a>
 	</div>
 </div>
 
@@ -43,14 +43,21 @@
 					<div class="row">
 
 						<div class="col-12 text-center">
+							<h4 class="text-center">{{app.app_name}}</h4>
+							<div>
+								Last Updated On:- {{app.date_time}}
+							</div>
 							<div>
 								<h4 class="text-left">Developed By:- </h4>
 								{% if current_user and current_user.id == app.user_id %}
 									<div class="text-right">
-										<button class="btn btn-sm btn-danger">Edit</button>
+										<a href="/android/app_edit">
+											<button class="btn btn-sm btn-danger">Edit</button>
+										</a>
 									</div>
 								{% endif %}
 							</div>
+							
 							<a href="{{app.dev_profile_url}}"><p><h5 class="underline">{{app.dev_name}}</h5></p></a>
 							<p>{{app.intro1}}</p>
 							<p>{{app.intro2}}</p>
