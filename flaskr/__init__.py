@@ -4,7 +4,6 @@ from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 from oauthlib.oauth2 import WebApplicationClient
 
-
 app = Flask(__name__)
 try:
     app.config.from_object('config_local.Config')

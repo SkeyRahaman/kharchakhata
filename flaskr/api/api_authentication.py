@@ -2,7 +2,7 @@ from flask import (Blueprint, redirect,
                    render_template, request,
                    jsonify, make_response)
 from itsdangerous import URLSafeSerializer, URLSafeTimedSerializer
-from flask_cors import cross_origin
+from flask_cors import CORS, cross_origin
 from flaskr.models import Users
 from flaskr.functions import *
 from flaskr import db, bcrypt, app
@@ -12,6 +12,7 @@ import jwt
 
 bp = Blueprint('api_auth', __name__,
                url_prefix='/api/auth')
+CORS(bp)
 s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 email_link = URLSafeSerializer(app.config['SECRET_KEY'])
 
@@ -35,8 +36,12 @@ def token_required(f):
     return decorated
 
 
+@bp.route('/test')
+def test():
+    return jsonify({"message": "I m shakib....."})
+
+
 @bp.route('/login', methods=['POST'])
-@cross_origin()
 def login_and_get_token():
     data = request.get_json()
     if data and "email" in data and "password" in data:
@@ -51,7 +56,6 @@ def login_and_get_token():
 
 
 @bp.route('/edit_user', methods=['POST'])
-@cross_origin()
 @token_required
 def edit_user(current_user):
     data = request.get_json()
@@ -95,7 +99,6 @@ def edit_user(current_user):
 
 
 @bp.route('/add_user', methods=['POST'])
-@cross_origin()
 def add_user():
     data = request.get_json()
     if data:
@@ -166,7 +169,6 @@ def add_user():
 
 
 @bp.route('/send_password_reset_email_for/<email>')
-@cross_origin()
 def send_password_reset_email_for(email):
     if "@" in str(email) and ".com" in str(email):
         user = Users.query.filter_by(email=email).first()
@@ -182,7 +184,6 @@ def send_password_reset_email_for(email):
 
 
 @bp.route('/get_user')
-@cross_origin()
 @token_required
 def get_user(current_user):
     try:
@@ -203,7 +204,6 @@ def get_user(current_user):
 
 
 @bp.route('/remove_dp')
-@cross_origin()
 @token_required
 def remove_dp(current_user):
     user = Users.query.filter_by(email=current_user.email).first()
@@ -213,7 +213,6 @@ def remove_dp(current_user):
 
 
 @bp.route('/send_conformation_mail_after_login')
-@cross_origin()
 @token_required
 def send_conformation_mail_after_login(current_user):
     token = email_link.dumps(current_user.email, salt="this_is_the_email")
@@ -226,7 +225,6 @@ def send_conformation_mail_after_login(current_user):
 
 
 @bp.route('/send_conformation_mail_before_login/<email>')
-@cross_origin()
 def send_conformation_mail_before_login(email):
     current_user = Users.query.filter_by(email=email).first()
     token = email_link.dumps(email, salt="this_is_the_email")
