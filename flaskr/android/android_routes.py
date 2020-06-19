@@ -15,7 +15,7 @@ bp = Blueprint('download', __name__,
 
 @bp.route('/')
 def android():
-    apps = db.session.query(Android).over(partition_by=Android.user_id, order_by=Android.date_time)
+    apps = db.session.query(Android).distinct(Android.user_id)
     for i in range(10):
         print("**************************")
     for i in apps:
