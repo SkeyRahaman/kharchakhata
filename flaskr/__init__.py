@@ -3,10 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 from oauthlib.oauth2 import WebApplicationClient
-from flask_cors import CORS
+
 
 app = Flask(__name__)
-CORS(app)
 try:
     app.config.from_object('config_local.Config')
 except Exception as e:

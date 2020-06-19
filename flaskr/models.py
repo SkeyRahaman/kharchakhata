@@ -194,7 +194,7 @@ class Android(db.Model):
     approved = db.Column(db.Integer, nullable=False, default=0)
 
     def __repr__(self):
-        return '<Android name %r>' % self.app_name
+        return '<Android name %r>' % self.date_time
 
     def __init__(self, app_name, app_logo_url,
                  dev_name, intro1, intro2,

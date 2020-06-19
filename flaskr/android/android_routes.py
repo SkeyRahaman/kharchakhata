@@ -5,6 +5,7 @@ from flask_login import login_required, current_user
 from flaskr import db, app
 import boto3
 from datetime import datetime
+from sqlalchemy import func
 
 bp = Blueprint('download', __name__,
                static_folder='static',
@@ -14,7 +15,13 @@ bp = Blueprint('download', __name__,
 
 @bp.route('/')
 def android():
-    apps = Android.query.filter_by(approved=1)
+    apps = db.session.query(Android).over(partition_by=Android.user_id, order_by=Android.date_time)
+    for i in range(10):
+        print("**************************")
+    for i in apps:
+        print(i)
+    for i in range(10):
+        print("@@@@@@@@@@@@@@@@@@@")
     return render_template("android.html",
                            apps=apps)
 
@@ -37,14 +44,12 @@ def add_app():
                               )
         s3_1.Bucket("kharchakhata-files") \
             .put_object(Key=app_icon_name, Body=image, ACL='public-read')
-        s3_1.close()
         s3_2 = boto3.resource('s3',
                               aws_access_key_id=app.config["ACCESS_ID"],
                               aws_secret_access_key=app.config["ACCESS_KEY"]
                               )
         s3_2.Bucket("kharchakhata-files") \
             .put_object(Key=app_name, Body=app_, ACL='public-read')
-        s3_2.close()
         app_logo_url = "https://s3-{}.amazonaws.com/{}/{}".format(
             app.config["S3_REGION"],
             app.config['S3_BUCKET_NAME'],
