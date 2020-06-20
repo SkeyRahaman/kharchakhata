@@ -127,4 +127,5 @@ def delete_application(id):
     if app and app.user_id == current_user.id:
         db.session.delete(app)
         db.session.commit()
+        flash("Application Removed.!!", "danger")
     return redirect("/android")
