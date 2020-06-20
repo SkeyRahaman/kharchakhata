@@ -15,8 +15,10 @@ bp = Blueprint('download', __name__,
 
 @bp.route('/')
 def android():
-    apps = db.session.query(Android).filter(Android.approved == 1)\
-        .group_by(Android.user_id.desc()).order_by(Android.date_time)
+    apps = db.session.query(Android) \
+        .filter(Android.date_time.in_(db.session.query(func.max(Android.date_time)) \
+                                      .filter(Android.approved == 1) \
+                                      .group_by(Android.user_id).subquery()))
     if current_user.is_authenticated:
         my_apps = Android.query.filter(Android.user_id == current_user.id).all()
     else:
@@ -27,6 +29,7 @@ def android():
 
 
 @bp.route('/app_submit', methods=['GET', 'POST'])
+@login_required
 def add_app():
     form = App_submit()
     if request.method == 'POST' and form.validate_on_submit():
@@ -78,6 +81,8 @@ def add_app():
         flash("Application Upload successful, Your application will come online after we verify your application.",
               "success")
         return redirect('/android')
+    form.dev_name.default = str(current_user.fname) + " " + str(current_user.mname) + " " + str(current_user.lname)
+    form.process()
     return render_template('add_app.html',
                            form=form)
 
@@ -100,9 +105,9 @@ def edit_app(app_id):
         flash("Change has been Submitted!", "success")
         return redirect('/android')
     else:
-        app = db.session.query(Android)\
-            .filter(Android.id == app_id)\
-            .filter(Android.user_id == current_user.id)\
+        app = db.session.query(Android) \
+            .filter(Android.id == app_id) \
+            .filter(Android.user_id == current_user.id) \
             .first()
         form.app_name.default = app.app_name
         form.dev_name.default = app.dev_name
