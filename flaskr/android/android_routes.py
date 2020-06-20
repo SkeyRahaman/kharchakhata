@@ -15,15 +15,15 @@ bp = Blueprint('download', __name__,
 
 @bp.route('/')
 def android():
-    apps = db.session.query(Android).distinct(Android.user_id)
-    for i in range(10):
-        print("**************************")
-    for i in apps:
-        print(i)
-    for i in range(10):
-        print("@@@@@@@@@@@@@@@@@@@")
+    apps = db.session.query(Android).filter(Android.approved == 1)\
+        .group_by(Android.user_id.desc()).order_by(Android.date_time)
+    if current_user.is_authenticated:
+        my_apps = Android.query.filter(Android.user_id == current_user.id).all()
+    else:
+        my_apps = None
     return render_template("android.html",
-                           apps=apps)
+                           apps=apps,
+                           my_apps=my_apps)
 
 
 @bp.route('/app_submit', methods=['GET', 'POST'])
@@ -82,20 +82,33 @@ def add_app():
                            form=form)
 
 
-@bp.route('/app_edit', methods=['GET', 'POST'])
-def edit_app():
-    current_user = Users.query.filter_by(id=1).first()
+@bp.route('/app_edit/<app_id>', methods=['GET', 'POST'])
+@login_required
+def edit_app(app_id):
     form = App_edit()
     if request.method == 'POST' and form.validate_on_submit():
-        pass
+        app = db.session.query(Android) \
+            .filter(Android.id == app_id) \
+            .filter(Android.user_id == current_user.id) \
+            .first()
+        app.name = request.form.get('app_name')
+        app.dev_name = request.form.get('dev_name')
+        app.intro1 = request.form.get('intro1')
+        app.intro2 = request.form.get('intro2')
+        app.dev_profile_url = request.form.get('dev_profile_url')
+        db.session.commit()
+        flash("Change has been Submitted!", "success")
+        return redirect('/android')
     else:
-        android = db.session.query(Android).filter(Android.user_id == current_user.id) \
-            .order_by(Android.date_time).first()
-        form.app_name.default = android.app_name
-        form.dev_name.default = android.dev_name
-        form.intro1.default = android.intro1
-        form.intro2.default = android.intro2
-        form.dev_profile_url.default = android.dev_profile_url
+        app = db.session.query(Android)\
+            .filter(Android.id == app_id)\
+            .filter(Android.user_id == current_user.id)\
+            .first()
+        form.app_name.default = app.app_name
+        form.dev_name.default = app.dev_name
+        form.intro1.default = app.intro1
+        form.intro2.default = app.intro2
+        form.dev_profile_url.default = app.dev_profile_url
         form.process()
     return render_template('edit_app.html',
                            form=form)
