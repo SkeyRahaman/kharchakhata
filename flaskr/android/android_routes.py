@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, abort
+from flask import Blueprint, render_template, request, flash, redirect, abort, url_for
 from flaskr.models import Android, Users
 from flaskr.forms import App_edit, App_submit
 from flask_login import login_required, current_user
@@ -7,7 +7,7 @@ import boto3
 from datetime import datetime
 from sqlalchemy import func
 
-bp = Blueprint('download', __name__,
+bp = Blueprint('android_bp', __name__,
                static_folder='static',
                template_folder="templates",
                url_prefix="/android")
@@ -116,4 +116,15 @@ def edit_app(app_id):
         form.dev_profile_url.default = app.dev_profile_url
         form.process()
     return render_template('edit_app.html',
-                           form=form)
+                           form=form,
+                           app_id=app_id)
+
+
+@bp.route('/delete/<id>')
+@login_required
+def delete_application(id):
+    app = db.session.query(Android).filter(Android.id == id).first()
+    if app and app.user_id == current_user.id:
+        db.session.delete(app)
+        db.session.commit()
+    return redirect("/android")
