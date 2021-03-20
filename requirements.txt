@@ -31,7 +31,7 @@ infinity==1.4
 intervals==0.8.1
 isort==4.3.21
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 jmespath==0.10.0
 lazy-object-proxy==1.4.3
 MarkupSafe==1.1.1
