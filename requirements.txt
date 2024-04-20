@@ -15,7 +15,7 @@ dash-html-components==1.0.3
 dash-renderer==1.4.0
 dash-table==4.6.2
 decorator==4.4.2
-dnspython==1.16.0
+dnspython==2.6.1
 docutils==0.15.2
 email-validator==1.1.0
 Flask==1.1.2
