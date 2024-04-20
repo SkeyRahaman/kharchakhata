@@ -26,7 +26,7 @@ Flask-SQLAlchemy==2.4.1
 Flask-WTF==0.14.3
 future==0.18.2
 gunicorn==20.0.4
-idna==2.9
+idna==3.7
 infinity==1.4
 intervals==0.8.1
 isort==4.3.21
