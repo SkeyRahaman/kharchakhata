@@ -10,7 +10,7 @@ click==7.1.2
 colorama==0.4.3
 cryptography==42.0.4
 dash==1.11.0
-dash-core-components==1.9.1
+dash-core-components==2.0.0
 dash-html-components==2.0.0
 dash-renderer==1.4.0
 dash-table==4.6.2
