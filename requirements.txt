@@ -59,7 +59,7 @@ toml==0.10.0
 typed-ast==1.4.1
 urllib3==1.25.9
 validators==0.15.0
-Werkzeug==1.0.1
+Werkzeug==2.3.8
 wrapt==1.12.1
 WTForms==2.3.1
 WTForms-Components==0.10.4
