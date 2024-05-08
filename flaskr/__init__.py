@@ -5,11 +5,8 @@ from flask_bcrypt import Bcrypt
 from oauthlib.oauth2 import WebApplicationClient
 
 app = Flask(__name__)
-try:
-    app.config.from_object('config_local.Config')
-except Exception as e:
-    print("we are configuring the Server side configaration.",e)
-    app.config.from_object('config.Config')
+app.config.from_object('config.DevelopmentConfig')
+
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
