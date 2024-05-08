@@ -1,38 +1,38 @@
 class Config:
     # Basic Configurations
-    SECRET_KEY = "a0Xy9vRzX5JwQ8nBmS2fEoLg3DdJ7tKz"  # Secure, random secret key
+    SECRET_KEY = "your_secret_key_here"  # Replace with a secure, random secret key
     DEBUG = False  # Default to production setting
 
     # Email Configuration
-    EMAIL_USERNAME = "kharcha.khata.m2@gmail.com"
-    EMAIL_PASSWORD = "Kharcha@123"
+    EMAIL_USERNAME = "your_email@example.com"
+    EMAIL_PASSWORD = "your_email_password_here"
 
     # Database Configuration
-    DB_TYPE = "mysql+mysqlconnector"  # Database type and connector
-    DB_USERNAME = "root"  # Database username
-    DB_PASSWORD = ""  # Database password (empty string in this case)
+    DB_TYPE = "mysql+mysqlconnector"  # Database type and connector (e.g., mysql+mysqlconnector, postgres)
+    DB_USERNAME = "your_db_username_here"  # Database username
+    DB_PASSWORD = "your_db_password_here"  # Database password
     DB_HOST = "127.0.0.1"  # Database host (localhost)
-    DB_NAME = "kharchakhatadb"  # Database name
+    DB_NAME = "your_db_name_here"  # Database name
 
     # Construct the full database URI from individual components
     SQLALCHEMY_DATABASE_URI = f"{DB_TYPE}://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # Disable unnecessary tracking
-    SQLALCHEMY_ECHO = False
+    SQLALCHEMY_ECHO = False  # Set to True for debugging SQL queries
     TIMEOUT = 180  # Database connection timeout in seconds
 
     # OAuth (Google and Facebook) Configuration
-    GOOGLE_CLIENT_ID = "1054655630563-eo9jbir0n130tup85vgros8srrof15jc.apps.googleusercontent.com"
-    GOOGLE_CLIENT_SECRET = "PG3GMDRYysLeGDSHO_EStP6v"
+    GOOGLE_CLIENT_ID = "your_google_client_id_here"
+    GOOGLE_CLIENT_SECRET = "your_google_client_secret_here"
     GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
-    FACEBOOK_CLIENT_ID = "253088142772668"
-    FACEBOOK_CLIENT_SECRET = "cd3edf3fce9a462edfd98b8e99241ffe"
+    FACEBOOK_CLIENT_ID = "your_facebook_client_id_here"
+    FACEBOOK_CLIENT_SECRET = "your_facebook_client_secret_here"
 
     # AWS S3 Configuration
-    ACCESS_ID = "AKIAITBOCNACLR5F6HTA"
-    ACCESS_KEY = "ONLYLT90YpznIfNqPg6im42U412JOOWcyVuSBXGB"
-    S3_REGION = "ap-south-1"
-    S3_BUCKET_NAME = "kharchakhata-files"
+    ACCESS_ID = "your_aws_access_id_here"
+    ACCESS_KEY = "your_aws_access_key_here"
+    S3_REGION = "your_s3_region_here"  # Example: 'ap-south-1'
+    S3_BUCKET_NAME = "your_s3_bucket_name_here"
 
 
 class DevelopmentConfig(Config):
