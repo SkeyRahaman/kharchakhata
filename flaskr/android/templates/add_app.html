@@ -4,7 +4,7 @@
 <div class="row">
 	<div class="col-md-12 col-lg-7">
 		<div class="container mx-4 card p-3 m-auto">
-			<form method="POST" action="">
+			<form method="POST" action="" enctype=multipart/form-data>
 				{{ form.hidden_tag() }}
 				<fieldset class="form-group">
 					<legend class="border-bottom mb-4">
@@ -80,6 +80,7 @@
 						<strong>
 							{{ form.intro1.label(class="form-control-label")}}
 						</strong>
+						<span class="text-danger">*</span>
 						{% if form.intro1.errors %}
 							{{ form.intro1(class="form-control form-control-lg is-invalid")}}
 							<div>
@@ -96,6 +97,7 @@
 						<strong>
 							{{ form.intro2.label(class="form-control-label")}}
 						</strong>
+						<span class="text-danger">*</span>
 						{% if form.intro2.errors %}
 							{{ form.intro2(class="form-control form-control-lg is-invalid")}}
 							<div>
@@ -127,6 +129,7 @@
 					
 				</fieldset>
 				<div class="form-group">
+					<button class="btn btn-danger" onclick="history.back();">BACK</button>
 					{{ form.submit(class='btn btn-success float-right')}}
 				</div>
 			</form>					

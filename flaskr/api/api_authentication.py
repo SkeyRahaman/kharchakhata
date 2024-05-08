@@ -2,7 +2,7 @@ from flask import (Blueprint, redirect,
                    render_template, request,
                    jsonify, make_response)
 from itsdangerous import URLSafeSerializer, URLSafeTimedSerializer
-
+from flask_cors import CORS, cross_origin
 from flaskr.models import Users
 from flaskr.functions import *
 from flaskr import db, bcrypt, app
@@ -12,6 +12,7 @@ import jwt
 
 bp = Blueprint('api_auth', __name__,
                url_prefix='/api/auth')
+CORS(bp)
 s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 email_link = URLSafeSerializer(app.config['SECRET_KEY'])
 
@@ -33,6 +34,11 @@ def token_required(f):
             return jsonify({"message": "invalid token"})
 
     return decorated
+
+
+@bp.route('/test')
+def test():
+    return jsonify({"message": "I m shakib....."})
 
 
 @bp.route('/login', methods=['POST'])
