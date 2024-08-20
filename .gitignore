@@ -24,3 +24,4 @@ config_local.py
 type.csv
 users.xlsx
 sql
+config.py
