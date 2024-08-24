@@ -1,6 +1,4 @@
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
 from dash.dependencies import Input, Output
 from flaskr.functions.dash_figures import *
 from flaskr.models import Expences
@@ -42,66 +40,66 @@ def create_dashboard(server=app):
     )
 
     dash_app.title = 'KharchaKhata - Charts'
-    dash_app.layout = html.Div(className="mb-0", children=[
+    dash_app.layout = dash.html.Div(className="mb-0", children=[
 
         # hedder
 
-        html.Nav(className='navbar heading', children=[
-            html.Strong(id='name_app', children=[
-                html.A(href="/dashboard/all/all", children='KHARCHAKHATA')
+        dash.html.Nav(className='navbar heading', children=[
+            dash.html.Strong(id='name_app', children=[
+                dash.html.A(href="/dashboard/all/all", children='KHARCHAKHATA')
             ]),
-            html.Strong(className="heading_side", id='my_account', children=[
-                html.A(href="/my_account", children='Loading...')
+            dash.html.Strong(className="heading_side", id='my_account', children=[
+                dash.html.A(href="/my_account", children='Loading...')
             ])
         ]),
 
         # Navbar
 
-        html.Nav(className="navbar navbar-expand-lg navbar-light bg-light", children=[
-            html.Button(className="navbar-toggler", type="button", id="navbar-button", children=[
-                html.Span(className="navbar-toggler-icon")
+        dash.html.Nav(className="navbar navbar-expand-lg navbar-light bg-light", children=[
+            dash.html.Button(className="navbar-toggler", type="button", id="navbar-button", children=[
+                dash.html.Span(className="navbar-toggler-icon")
             ]),
-            html.Div(className="collapse navbar-collapse", id="navbarNav", children=[
-                html.Ul(className="navbar-nav", children=[
-                    html.Li(className="nav-item", children=[
-                        html.A(className="nav-link", href="/", children=[
-                            html.Strong("Dashboard")
+            dash.html.Div(className="collapse navbar-collapse", id="navbarNav", children=[
+                dash.html.Ul(className="navbar-nav", children=[
+                    dash.html.Li(className="nav-item", children=[
+                        dash.html.A(className="nav-link", href="/", children=[
+                            dash.html.Strong("Dashboard")
                         ])
                     ]),
-                    html.Li(className="nav-item active", children=[
-                        html.A(className="nav-link", href="/dashapp/", children=[
-                            html.Strong("Charts")
+                    dash.html.Li(className="nav-item active", children=[
+                        dash.html.A(className="nav-link", href="/dashapp/", children=[
+                            dash.html.Strong("Charts")
                         ])
                     ]),
 
-                    html.Li(className="nav-item", children=[
-                        html.A(className="nav-link", href="/my_account", children=[
-                            html.Strong("My Account")
+                    dash.html.Li(className="nav-item", children=[
+                        dash.html.A(className="nav-link", href="/my_account", children=[
+                            dash.html.Strong("My Account")
                         ])
                     ]),
-                    html.Li(className="nav-item", children=[
-                        html.A(className="nav-link", href="/add_expence", children=[
-                            html.Strong("Add Transaction")
+                    dash.html.Li(className="nav-item", children=[
+                        dash.html.A(className="nav-link", href="/add_expence", children=[
+                            dash.html.Strong("Add Transaction")
                         ])
                     ]),
-                    html.Li(className="nav-item", children=[
-                        html.A(className="nav-link", href="/about", children=[
-                            html.Strong("About")
+                    dash.html.Li(className="nav-item", children=[
+                        dash.html.A(className="nav-link", href="/about", children=[
+                            dash.html.Strong("About")
                         ])
                     ]),
-                    html.Li(className="nav-item", children=[
-                        html.A(className="nav-link", href="/settings", children=[
-                            html.Strong("Settings")
+                    dash.html.Li(className="nav-item", children=[
+                        dash.html.A(className="nav-link", href="/settings", children=[
+                            dash.html.Strong("Settings")
                         ])
                     ]),
-                    html.Li(className="nav-item", children=[
-                        html.A(className="nav-link", href="/logout", children=[
-                            html.Strong("Logout")
+                    dash.html.Li(className="nav-item", children=[
+                        dash.html.A(className="nav-link", href="/logout", children=[
+                            dash.html.Strong("Logout")
                         ])
                     ]),
-                    html.Li(className="nav-item", children=[
-                        html.Div(id="month_dropdown", children=[
-                            dcc.Dropdown(id="month_select",
+                    dash.html.Li(className="nav-item", children=[
+                        dash.html.Div(id="month_dropdown", children=[
+                            dash.dcc.Dropdown(id="month_select",
                                          searchable=False,
                                          clearable=False,
                                          style={
@@ -113,9 +111,9 @@ def create_dashboard(server=app):
                                          value=get_months_first_value()),
                         ]),
                     ]),
-                    html.Li(className="nav-item", children=[
-                        html.Div(id="income_dropdown", children=[
-                            dcc.Dropdown(id="expence_type",
+                    dash.html.Li(className="nav-item", children=[
+                        dash.html.Div(id="income_dropdown", children=[
+                            dash.dcc.Dropdown(id="expence_type",
                                          searchable=False,
                                          clearable=False,
                                          style={
@@ -136,36 +134,36 @@ def create_dashboard(server=app):
 
         # DashBoard
 
-        html.Div(className="row container-fluid", children=[
-            html.Div(className="float col-lg-6 col-md-12 p-2 mx-auto min_width", children=[
-                html.Div(className="bg-light card row", children=[
-                    html.Div(className="col-12 btn-group btn-group-toggle mx-auto mt-2", id="fig1_togel", children=[
-                        html.Label(className="btn btn-outline-dark active", children=[
+        dash.html.Div(className="row container-fluid", children=[
+            dash.html.Div(className="float col-lg-6 col-md-12 p-2 mx-auto min_width", children=[
+                dash.html.Div(className="bg-light card row", children=[
+                    dash.html.Div(className="col-12 btn-group btn-group-toggle mx-auto mt-2", id="fig1_togel", children=[
+                        dash.html.Label(className="btn btn-outline-dark active", children=[
                             "Bar Graph",
-                            dcc.Input(type="radio", id='graph1_btn1')
+                            dash.dcc.Input(type="radio", id='graph1_btn1')
                         ]),
-                        html.Label(className="btn btn-outline-dark", children=[
+                        dash.html.Label(className="btn btn-outline-dark", children=[
                             "Heatmap",
-                            dcc.Input(type="radio", id='graph1_btn2')
+                            dash.dcc.Input(type="radio", id='graph1_btn2')
                         ]),
                     ]),
-                    html.Div(id="graph1_1", className='col-12 mx-auto my-2', children=[
-                        dcc.Graph(
+                    dash.html.Div(id="graph1_1", className='col-12 mx-auto my-2', children=[
+                        dash.dcc.Graph(
                             id="bar_graph",
                             figure=first_bar_graph()
                         )
                     ]),
-                    html.Div(id="graph1_2", className='col-12  mx-auto my-2', children=[
-                        dcc.Graph(
+                    dash.html.Div(id="graph1_2", className='col-12  mx-auto my-2', children=[
+                        dash.dcc.Graph(
                             id="Heatmap",
                             figure=first_heatmap_graph(),
                         )
                     ]),
                 ])
             ]),
-            html.Div(className="col-lg-3 col-md-6 col-sm-12 p-2 mx-auto", children=[
-                html.Div(className="m-auto card bg-light", children=[
-                    dcc.Dropdown(id="type_graph_select",
+            dash.html.Div(className="col-lg-3 col-md-6 col-sm-12 p-2 mx-auto", children=[
+                dash.html.Div(className="m-auto card bg-light", children=[
+                    dash.dcc.Dropdown(id="type_graph_select",
                                  searchable=False,
                                  clearable=False,
                                  style={
@@ -179,15 +177,15 @@ def create_dashboard(server=app):
                                  ],
                                  value="donut",
                                  ),
-                    dcc.Graph(
+                    dash.dcc.Graph(
                         id="first_pie_chat",
                         figure=first_pie_chat("may", 2020, "Expenditure"),
                     ),
                 ])
             ]),
-            html.Div(className="col-lg-3 col-md-6 col-sm-12 p-2 mx-auto", children=[
-                html.Div(className="m-auto card bg-light", children=[
-                    dcc.Dropdown(id="subtype_graph_select",
+            dash.html.Div(className="col-lg-3 col-md-6 col-sm-12 p-2 mx-auto", children=[
+                dash.html.Div(className="m-auto card bg-light", children=[
+                    dash.dcc.Dropdown(id="subtype_graph_select",
                                  searchable=False,
                                  clearable=False,
                                  style={
@@ -201,7 +199,7 @@ def create_dashboard(server=app):
                                  ],
                                  value="pie",
                                  ),
-                    dcc.Graph(
+                    dash.dcc.Graph(
                         id="first_pie_chat_subtype",
                         figure=first_pie_chat_subtype(month="May",
                                                       year=2020,
@@ -210,9 +208,9 @@ def create_dashboard(server=app):
                     )
                 ])
             ]),
-            html.Div(className="col-lg-3 col-md-6 col-sm-12 p-2 mx-auto", children=[
-                html.Div(className="m-auto card bg-light", children=[
-                    dcc.Dropdown(id="frequency_graph_select",
+            dash.html.Div(className="col-lg-3 col-md-6 col-sm-12 p-2 mx-auto", children=[
+                dash.html.Div(className="m-auto card bg-light", children=[
+                    dash.dcc.Dropdown(id="frequency_graph_select",
                                  searchable=False,
                                  clearable=False,
                                  style={
@@ -226,15 +224,15 @@ def create_dashboard(server=app):
                                  ],
                                  value="spider",
                                  ),
-                    dcc.Graph(
+                    dash.dcc.Graph(
                         id="frequency_pie_chat",
                         figure=frequency_pie_chat("may", 2020, "Expenditure"),
                     ),
                 ])
             ]),
-            html.Div(className="col-lg-3 col-md-6 col-sm-12 p-2 mx-auto", children=[
-                html.Div(className="m-auto card bg-light", children=[
-                    dcc.Dropdown(id="payment_type_graph_select",
+            dash.html.Div(className="col-lg-3 col-md-6 col-sm-12 p-2 mx-auto", children=[
+                dash.html.Div(className="m-auto card bg-light", children=[
+                    dash.dcc.Dropdown(id="payment_type_graph_select",
                                  searchable=False,
                                  clearable=False,
                                  style={
@@ -248,7 +246,7 @@ def create_dashboard(server=app):
                                  ],
                                  value="donut",
                                  ),
-                    dcc.Graph(
+                    dash.dcc.Graph(
                         id="payment_type_pie_chat",
                         figure=payment_type_pie_chat(month="May",
                                                      year=2020,
@@ -256,17 +254,17 @@ def create_dashboard(server=app):
                     )
                 ]),
             ]),
-            html.Div(className="col-lg-6 col-md-12 p-2 mx-auto min_width", children=[
-                html.Div(className="m-auto card bg-light", children=[
-                    dcc.Graph(
+            dash.html.Div(className="col-lg-6 col-md-12 p-2 mx-auto min_width", children=[
+                dash.html.Div(className="m-auto card bg-light", children=[
+                    dash.dcc.Graph(
                         id="expenditure_income_line_graph",
                         figure=expenditure_income_line_graph()
                     )
                 ]),
             ]),
-            html.Div(className="col-lg-6 col-md-12 p-2 mx-auto min_width", children=[
-                html.Div(className="m-auto card bg-light", children=[
-                    dcc.Graph(
+            dash.html.Div(className="col-lg-6 col-md-12 p-2 mx-auto min_width", children=[
+                dash.html.Div(className="m-auto card bg-light", children=[
+                    dash.dcc.Graph(
                         id="savings_month_wise_bar_graph",
                         figure=savings_month_wise_bar_graph()
                     )
@@ -276,9 +274,9 @@ def create_dashboard(server=app):
         ]),
 
         # Footer
-        html.Div(className='footer text-center', children=[
-            html.A(href="http://shakib-portfolio-app.herokuapp.com/", children=[
-                html.Div("A Complete Project By Md Shakib Mondal", className="btn")
+        dash.html.Div(className='footer text-center', children=[
+            dash.html.A(href="http://shakib-portfolio-app.herokuapp.com/", children=[
+                dash.html.Div("A Complete Project By Md Shakib Mondal", className="btn")
             ]),
         ]),
     ])

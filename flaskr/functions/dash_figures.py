@@ -1,6 +1,5 @@
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
-import plotly.express as px
 from flask_login import current_user
 from flaskr.functions import *
 import calendar
@@ -8,7 +7,7 @@ from flaskr import db
 from sqlalchemy import func
 from flaskr.models import Expences, Type, Type_subtype, Sub_type, Frequency, Payment_medium
 from datetime import datetime
-import dash_html_components as html
+import dash.html as html
 
 
 def first_bar_graph(month="May", year=2020, expence_type="expence"):

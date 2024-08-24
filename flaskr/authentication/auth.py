@@ -6,7 +6,7 @@ from flaskr.forms import Login_form, RegistrationForm, Forgot_password_form, \
     Creat_new_password, Reset_password, Edit_profile_form, Profile_picture_form
 from flask_login import login_user, logout_user, login_required, current_user
 from itsdangerous import URLSafeTimedSerializer, URLSafeSerializer
-import boto3
+# import boto3
 import json
 import requests
 
@@ -267,31 +267,31 @@ def my_account():
                            form=form)
 
 
-@bp.route('/change_dp', methods=['post', 'get'])
-@login_required
-def change_dp():
-    form = Profile_picture_form()
-    if request.method == 'POST' and form.validate_on_submit():
-        s3 = boto3.resource('s3',
-                            aws_access_key_id=app.config["ACCESS_ID"],
-                            aws_secret_access_key=app.config["ACCESS_KEY"]
-                            )
-        key = "dp_" + str(current_user.id) + "." + request.files["dp"].filename.split(".")[-1]
-        try:
-            s3.Bucket("kharchakhata-files").put_object(Key=key, Body=request.files["dp"], ACL='public-read')
-            user = Users.query.filter_by(email=current_user.email).first()
-            user.picture = "https://s3-{}.amazonaws.com/{}/{}".format(
-                app.config["S3_REGION"],
-                app.config['S3_BUCKET_NAME'],
-                key
-            )
-            db.session.commit()
-            flash("Profile picture updated..", "success")
-            return redirect("/my_account")
-        except:
-            flash("Cannot uplode file!.. Try after some time.!.", "danger")
+# @bp.route('/change_dp', methods=['post', 'get'])
+# @login_required
+# def change_dp():
+#     form = Profile_picture_form()
+#     if request.method == 'POST' and form.validate_on_submit():
+#         s3 = boto3.resource('s3',
+#                             aws_access_key_id=app.config["ACCESS_ID"],
+#                             aws_secret_access_key=app.config["ACCESS_KEY"]
+#                             )
+#         key = "dp_" + str(current_user.id) + "." + request.files["dp"].filename.split(".")[-1]
+#         try:
+#             s3.Bucket("kharchakhata-files").put_object(Key=key, Body=request.files["dp"], ACL='public-read')
+#             user = Users.query.filter_by(email=current_user.email).first()
+#             user.picture = "https://s3-{}.amazonaws.com/{}/{}".format(
+#                 app.config["S3_REGION"],
+#                 app.config['S3_BUCKET_NAME'],
+#                 key
+#             )
+#             db.session.commit()
+#             flash("Profile picture updated..", "success")
+#             return redirect("/my_account")
+#         except:
+#             flash("Cannot uplode file!.. Try after some time.!.", "danger")
 
-    return render_template("profile_picture.html", form=form)
+#     return render_template("profile_picture.html", form=form)
 
 
 @bp.route('/remove_dp')
