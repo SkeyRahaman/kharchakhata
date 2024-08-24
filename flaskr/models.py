@@ -1,5 +1,7 @@
 from flaskr import db, loginmanager
 from flask_login import UserMixin
+from datetime import datetime
+from flask_login import current_user
 
 
 @loginmanager.user_loader
@@ -60,6 +62,7 @@ class Users(db.Model, UserMixin):
     sex_id = db.Column(db.Integer, db.ForeignKey("sex.id"), nullable=False)
     active = db.Column(db.Integer, default=1)
     expence_id = db.relationship('Expences', backref='user', lazy=True)
+    android_id = db.relationship('Android', backref='android', lazy=True)
 
     def __repr__(self):
         return f"Users('{self.fname}','{self.email}','{self.password}')"
@@ -175,3 +178,35 @@ class Admin(db.Model, UserMixin):
         self.phone = phone
         self.password = password
         self.sex = sex
+
+
+class Android(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    app_name = db.Column(db.String(40), nullable=False)
+    app_logo_url = db.Column(db.String(100))
+    dev_name = db.Column(db.String(60), nullable=False)
+    intro1 = db.Column(db.String(80), nullable=False)
+    intro2 = db.Column(db.String(80), nullable=False)
+    app_url = db.Column(db.String(100), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    dev_profile_url = db.Column(db.String(100), default="#")
+    date_time = db.Column(db.DateTime, nullable=False)
+    approved = db.Column(db.Integer, nullable=False, default=0)
+
+    def __repr__(self):
+        return '<Android name %r>' % self.date_time
+
+    def __init__(self, app_name, app_logo_url,
+                 dev_name, intro1, intro2,
+                 app_url, user_id, dev_profile_url="#",
+                 ):
+        self.app_name = app_name
+        self.app_logo_url = app_logo_url
+        self.dev_name = dev_name
+        self.intro1 = intro1
+        self.intro2 = intro2
+        self.app_url = app_url
+        self.user_id = user_id
+        self.dev_profile_url = dev_profile_url
+        self.date_time = datetime.now()
+        self.approved = 0

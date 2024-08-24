@@ -135,11 +135,6 @@ def edit_expence(id):
         return redirect("/")
 
 
-@app.route('/android')
-def android():
-    return render_template("android.html")
-
-
 @app.route('/add_table/<month>/<year>/<id>')
 @login_required
 def add_table(month, year, id):

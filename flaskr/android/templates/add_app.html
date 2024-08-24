@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12 col-lg-7">
+		<div class="container mx-4 card p-3 m-auto">
+			<form method="POST" action="" enctype=multipart/form-data>
+				{{ form.hidden_tag() }}
+				<fieldset class="form-group">
+					<legend class="border-bottom mb-4">
+						Register Your Android Application Now<br>
+						<small class="font-weight-light text-danger">*Required!</small>
+					</legend>
+					<div class="form-group">
+						<strong>
+							{{ form.app_name.label(class="form-control-label")}}
+						</strong>
+						<span class="text-danger">*</span>
+						{% if form.app_name.errors %}
+							{{ form.app_name(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.app_name.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.app_name(class="form-control form-control-lg")}}
+						{% endif %}
+						<small class="font-weight-light">Mention the vertion number along with the name</small>
+					</div>
+					<div class="form-group">
+						<strong>
+							{{ form.app_logo.label(class="form-control-label")}}
+						</strong>
+						{% if form.app_logo.errors %}
+							{{ form.app_logo(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.app_logo.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.app_logo(class="form-control form-control-lg")}}
+						{% endif %}
+						<small class="font-weight-light">Once uploaded can-not be edited.!</small>
+					</div>
+					<div class="form-group">
+						<strong>
+							{{ form.app.label(class="form-control-label")}}
+						</strong>
+						<span class="text-danger">*</span>
+						{% if form.app.errors %}
+							{{ form.app(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.app.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.app(class="form-control form-control-lg")}}
+						{% endif %}
+					</div>
+					<div class="form-group">
+						<strong>
+							{{ form.dev_name.label(class="form-control-label")}}
+						</strong>
+						{% if form.dev_name.errors %}
+							{{ form.dev_name(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.dev_name.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.dev_name(class="form-control form-control-lg")}}
+						{% endif %}
+						<small class="font-weight-light">If not given, we will take your registered name.</small>
+					</div>
+					<div class="form-group">
+						<strong>
+							{{ form.intro1.label(class="form-control-label")}}
+						</strong>
+						<span class="text-danger">*</span>
+						{% if form.intro1.errors %}
+							{{ form.intro1(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.intro1.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.intro1(class="form-control form-control-lg")}}
+						{% endif %}
+						<small class="font-weight-light">Some Introductory words.</small>
+					</div>
+					<div class="form-group">
+						<strong>
+							{{ form.intro2.label(class="form-control-label")}}
+						</strong>
+						<span class="text-danger">*</span>
+						{% if form.intro2.errors %}
+							{{ form.intro2(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.intro2.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.intro2(class="form-control form-control-lg")}}
+						{% endif %}
+						<small class="font-weight-light">Some Introductory words.</small>
+					</div>
+					<div class="form-group">
+						<strong>
+							{{ form.dev_profile_url.label(class="form-control-label")}}
+						</strong>
+						{% if form.dev_profile_url.errors %}
+							{{ form.dev_profile_url(class="form-control form-control-lg is-invalid")}}
+							<div>
+								{% for error in form.dev_profile_url.errors %}
+									<span class="text-danger">{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.dev_profile_url(class="form-control form-control-lg")}}
+						{% endif %}
+						<small class="font-weight-light">Link to open when clicked on your name.</small>
+					</div>
+					
+				</fieldset>
+				<div class="form-group">
+					<button class="btn btn-danger" onclick="history.back();">BACK</button>
+					{{ form.submit(class='btn btn-success float-right')}}
+				</div>
+			</form>					
+		</div>
+	</div>
+</div>
+{% endblock %}

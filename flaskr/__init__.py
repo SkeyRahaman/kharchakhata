@@ -5,11 +5,8 @@ from flask_bcrypt import Bcrypt
 from oauthlib.oauth2 import WebApplicationClient
 
 app = Flask(__name__)
+app.config.from_object('config.DevelopmentConfig')
 
-try:
-    app.config.from_object('config_local.Config')
-except:
-    app.config.from_object('config.Config')
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -23,9 +20,15 @@ client = WebApplicationClient(app.config["GOOGLE_CLIENT_ID"])
 with app.app_context():
     from flaskr.authentication import auth
     from flaskr.errors.handlers import errors
+    from flaskr.api import api_authentication, api_route, info
+    from flaskr.android import android_routes
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(errors)
+    app.register_blueprint(api_route.bp)
+    app.register_blueprint(api_authentication.bp)
+    app.register_blueprint(android_routes.bp)
+    app.register_blueprint(info.bp)
 
     from flaskr.route import *
 
